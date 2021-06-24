@@ -1,4 +1,6 @@
 import Head from 'next/head';
+import { Button, Heading, Input, Text, VStack } from '@chakra-ui/react';
+
 import { useAuth } from '../lib/auth';
 
 export default function Home() {
@@ -32,27 +34,23 @@ export default function Home() {
       </Head>
 
       {/* testing code: start */}
-      <h1>Auth Skeleton</h1>
-
-      <div>Signed in as: {auth.user?.email}</div>
-
-      <form onSubmit={handleSignup}>
-        <input type="email" name="email" />
-        <input type="password" name="password" />
-        <button type="submit">Sign Up</button>
-      </form>
-      <br />
-
-      <form onSubmit={handleSignin}>
-        <input type="email" name="email" />
-        <input type="password" name="password" />
-        <button type="submit">Sign In</button>
-      </form>
-      <br />
-
-      <button type="button" onClick={() => auth.signout()}>
-        Sign Out
-      </button>
+      <VStack spacing="24px">
+        <Heading>Auth Skeleton</Heading>
+        <Text>Signed in as: {auth.user?.email}</Text>
+        <form onSubmit={handleSignup}>
+          <Input type="email" name="email" />
+          <Input type="password" name="password" />
+          <Button type="submit">Sign Up</Button>
+        </form>
+        <form onSubmit={handleSignin}>
+          <Input type="email" name="email" />
+          <Input type="password" name="password" />
+          <Button type="submit">Sign In</Button>
+        </form>
+        <Button type="button" onClick={() => auth.signout()}>
+          Sign Out
+        </Button>
+      </VStack>
       {/* testing code: end */}
     </div>
   );
