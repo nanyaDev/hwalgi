@@ -21,8 +21,8 @@ const Login = () => {
       </Flex>
       <Flex direction="column" grow={1} justify="center" align="center">
         <Box as="form" onSubmit={handleLogin}>
-          <Input type="email" name="email" />
-          <Input type="password" name="password" />
+          <Input type="email" name="email" placeholder="Email" />
+          <Input type="password" name="password" placeholder="Password" />
           <Button type="submit">Log In</Button>
         </Box>
       </Flex>

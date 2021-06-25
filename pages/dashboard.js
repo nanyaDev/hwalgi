@@ -1,33 +1,40 @@
-import { Flex, Stack, Button, Avatar, Heading } from '@chakra-ui/react';
 import NextLink from 'next/link';
+// prettier-ignore
+import { Flex, Stack, Button, Avatar, Heading, Spinner } from '@chakra-ui/react';
 
-import { useAuth } from '@/lib/auth';
+import useRequireAuth from '@/lib/useRequireAuth';
 
 // todo - extract <NextLink> + <Button> into custom component
 const Dashboard = () => {
-  const auth = useAuth();
+  const auth = useRequireAuth();
+
+  // ? - why does if(!auth) work in flytrap and usehooks.com
+  // ? - is conditional chaining required
+  if (!auth?.user) {
+    return <Spinner />;
+  }
 
   return (
     <Flex direction="column" h="100vh">
       <Flex justify="space-between" p={4}>
         <Heading>Hwalgi</Heading>
         <Stack spacing={4} isInline align="center">
-          <NextLink href="" passHref>
+          <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
               Stats
             </Button>
           </NextLink>
-          <NextLink href="" passHref>
+          <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
               Reference
             </Button>
           </NextLink>
-          <NextLink href="" passHref>
+          <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
               Search
             </Button>
           </NextLink>
-          <NextLink href="" passHref>
+          <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
               Settings
             </Button>
