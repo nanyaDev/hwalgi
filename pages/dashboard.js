@@ -6,7 +6,7 @@ import useRequireAuth from '@/lib/useRequireAuth';
 
 // todo - extract <NextLink> + <Button> into custom component
 const Dashboard = () => {
-  const auth = useRequireAuth();
+  const auth = useRequireAuth('/landing');
 
   // ? - why does if(!auth) work in flytrap and usehooks.com
   // ? - is conditional chaining required
@@ -36,7 +36,7 @@ const Dashboard = () => {
           </NextLink>
           <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
-              Settings
+              Community
             </Button>
           </NextLink>
           <Button variant="ghost" onClick={() => auth.signout()}>
@@ -47,12 +47,12 @@ const Dashboard = () => {
       </Flex>
       <Flex justify="center" h="full" align="center">
         <NextLink href="/lessons" passHref>
-          <Button as="a" m={3} p={10}>
+          <Button as="a" m={3} p={10} colorScheme="red">
             Lessons
           </Button>
         </NextLink>
         <NextLink href="/reviews" passHref>
-          <Button as="a" p={10} m={3}>
+          <Button as="a" p={10} m={3} colorScheme="blue">
             Reviews
           </Button>
         </NextLink>

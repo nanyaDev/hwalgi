@@ -12,11 +12,14 @@
     "@chakra-ui/react": "^1.6.4",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "@hookform/resolvers": "^2.6.0",
     "firebase": "^8.6.8",
     "framer-motion": "^4.1.17",
     "next": "11.0.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-hook-form": "^7.9.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "eslint": "7.29.0",

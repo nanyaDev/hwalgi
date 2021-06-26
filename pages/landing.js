@@ -5,7 +5,9 @@ const Landing = () => (
   <Flex direction="column" h="100vh">
     <Stack spacing={4} isInline justify="flex-end" p={4}>
       <NextLink href="/login" passHref>
-        <Button as="a">Log In</Button>
+        <Button as="a" variant="ghost">
+          Log In
+        </Button>
       </NextLink>
       <NextLink href="/signup" passHref>
         <Button as="a">Sign Up</Button>
