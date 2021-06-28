@@ -1,7 +1,8 @@
+import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // prettier-ignore
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Text, } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
 import schema from '@/utils/schema';
@@ -20,10 +21,10 @@ const Login = () => {
 
   return (
     <Flex justify="center" h="100vh">
-      <Flex direction="column" grow={1} justify="center" align="center">
+      <Flex direction="column" w="50%" justify="center" align="center">
         <Heading>Welcome Back!</Heading>
       </Flex>
-      <Flex direction="column" grow={1} justify="center" align="center">
+      <Flex direction="column" w="50%" justify="center" align="center">
         <Box as="form" w="sm" onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={errors.email}>
             <FormLabel id="email-label" htmlFor="email">
@@ -51,10 +52,22 @@ const Login = () => {
             />
             <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
           </FormControl>
-          <Button mt={4} isLoading={isSubmitting} type="submit">
+          <Button
+            mt={4}
+            w="full"
+            colorScheme="blue"
+            isLoading={isSubmitting}
+            type="submit"
+          >
             Log In
           </Button>
         </Box>
+        <Text mt={4} fontSize="sm" fontWeight="medium" color="gray.600">
+          Don&#39;t have an account?{' '}
+          <NextLink href="/signup" passHref>
+            <Link color="red.600">Sign Up!</Link>
+          </NextLink>
+        </Text>
       </Flex>
     </Flex>
   );
