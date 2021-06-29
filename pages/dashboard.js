@@ -1,10 +1,11 @@
 import NextLink from 'next/link';
 // prettier-ignore
-import { Flex, Stack, Button, Avatar, Heading, Spinner } from '@chakra-ui/react';
+import { Flex, Stack, Button, Avatar, Heading, Spinner, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
 import useRequireAuth from '@/lib/useRequireAuth';
 
 // todo - extract <NextLink> + <Button> into custom component
+// todo - investigate lazy mounting the menu button (cf. chakra docs)
 const Dashboard = () => {
   const auth = useRequireAuth('/landing');
 
@@ -21,6 +22,11 @@ const Dashboard = () => {
         <Stack spacing={4} isInline align="center">
           <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
+              Search
+            </Button>
+          </NextLink>
+          <NextLink href="#" passHref>
+            <Button as="a" variant="ghost">
               Stats
             </Button>
           </NextLink>
@@ -31,18 +37,15 @@ const Dashboard = () => {
           </NextLink>
           <NextLink href="#" passHref>
             <Button as="a" variant="ghost">
-              Search
-            </Button>
-          </NextLink>
-          <NextLink href="#" passHref>
-            <Button as="a" variant="ghost">
               Community
             </Button>
           </NextLink>
-          <Button variant="ghost" onClick={() => auth.signout()}>
-            Sign Out
-          </Button>
-          <Avatar size="sm" />
+          <Menu>
+            <MenuButton as={Avatar} size="sm" />
+            <MenuList>
+              <MenuItem onClick={() => auth.signout()}>Sign Out</MenuItem>
+            </MenuList>
+          </Menu>
         </Stack>
       </Flex>
       <Flex justify="center" h="full" align="center">
