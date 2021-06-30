@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // prettier-ignore
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Text, } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Text, useToast, } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
 import schema from '@/utils/schema';
@@ -14,9 +14,22 @@ const Login = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: yupResolver(schema) });
+  const toast = useToast();
 
   const onSubmit = async ({ email, password }) => {
-    await auth.signin(email, password);
+    try {
+      await auth.signin(email, password);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Error',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+    }
   };
 
   return (

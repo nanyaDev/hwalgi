@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // prettier-ignore
-import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Text, } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, Link, Text, useToast, } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
 import schema from '@/utils/schema';
@@ -14,19 +14,22 @@ const Signup = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: yupResolver(schema) });
+  const toast = useToast();
 
   const onSubmit = async ({ email, password }) => {
-    // ? why do these logs say isSubmitting is false
-    // console.log(isSubmitting);
-    // setTimeout(() => console.log('here', isSubmitting), 2500);
-
-    // return await new Promise((resolve) => {
-    //   setTimeout(() => resolve(), 5000);
-    // });
-
-    // note - either of these prevent on submit from immediately returning
-    // return auth.signup(email, password);
-    await auth.signup(email, password);
+    try {
+      await auth.signup(email, password);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Error',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right',
+      });
+    }
   };
 
   // todo - review form and client side validation
