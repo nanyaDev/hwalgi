@@ -20,24 +20,24 @@ const Dashboard = () => {
       <Flex justify="space-between" p={4}>
         <Heading>Hwalgi</Heading>
         <Stack spacing={4} isInline align="center">
-          <NextLink href="#" passHref>
+          <NextLink href="/catalogue" passHref>
             <Button as="a" variant="ghost">
-              Search
+              Catalogue
             </Button>
           </NextLink>
-          <NextLink href="#" passHref>
+          <NextLink href="/stats" passHref>
             <Button as="a" variant="ghost">
               Stats
             </Button>
           </NextLink>
-          <NextLink href="#" passHref>
-            <Button as="a" variant="ghost">
-              Reference
-            </Button>
-          </NextLink>
-          <NextLink href="#" passHref>
+          <NextLink href="/community" passHref>
             <Button as="a" variant="ghost">
               Community
+            </Button>
+          </NextLink>
+          <NextLink href="/search" passHref>
+            <Button as="a" variant="ghost">
+              Search
             </Button>
           </NextLink>
           <Menu>
