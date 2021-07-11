@@ -27,12 +27,12 @@ export const getStaticProps = async () => {
   };
 };
 
-// todo: work on image layout implementation
+// todo: make the grid responsive
 const Catalog = ({ catalog }) => {
   return (
     <AuthCheck>
       <Navbar />
-      <SimpleGrid columns={5} spacing={8} p={8} pl={64}>
+      <SimpleGrid columns={6} spacing={8} p={8}>
         {catalog.map((item) => (
           <Thumbnail key={item.tmdbID} item={item} />
         ))}

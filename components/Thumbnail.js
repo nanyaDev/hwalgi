@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Box } from '@chakra-ui/react';
 
+// todo: work on image layout implementation
 const Thumbnail = ({ item }) => {
   return (
     <>
