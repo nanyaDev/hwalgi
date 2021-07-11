@@ -1,14 +1,30 @@
-import Head from 'next/head';
+import NextLink from 'next/link';
+// prettier-ignore
+import { Flex, Button  } from '@chakra-ui/react';
 
-const Home = () => {
+import AuthCheck from '@/components/AuthCheck';
+import Navbar from '@/components/Navbar';
+
+const Dashboard = () => {
   return (
-    <div>
-      <Head>
-        <title>Hwalgi // Development</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-    </div>
+    <AuthCheck>
+      <Flex direction="column" h="100vh">
+        <Navbar />
+        <Flex justify="center" h="full" align="center">
+          <NextLink href="/lessons" passHref>
+            <Button as="a" m={3} p={10} colorScheme="red">
+              Lessons
+            </Button>
+          </NextLink>
+          <NextLink href="/reviews" passHref>
+            <Button as="a" p={10} m={3} colorScheme="blue">
+              Reviews
+            </Button>
+          </NextLink>
+        </Flex>
+      </Flex>
+    </AuthCheck>
   );
 };
 
-export default Home;
+export default Dashboard;
