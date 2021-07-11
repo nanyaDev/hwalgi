@@ -2,7 +2,7 @@ import { Flex, Button, Stack, Heading } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
 const Landing = () => (
-  <Flex direction="column" h="100vh">
+  <>
     <Stack spacing={4} isInline justify="flex-end" p={4}>
       <NextLink href="/login" passHref>
         <Button as="a" variant="ghost">
@@ -13,10 +13,10 @@ const Landing = () => (
         <Button as="a">Sign Up</Button>
       </NextLink>
     </Stack>
-    <Flex h="full" justify="center" align="center">
+    <Flex grow={1} justify="center" align="center">
       <Heading>Welcome to Hwalgi</Heading>
     </Flex>
-  </Flex>
+  </>
 );
 
 export default Landing;
