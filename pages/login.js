@@ -6,6 +6,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, I
 
 import { useAuth } from '@/lib/auth';
 import schema from '@/utils/schema';
+import AuthCheck from '@/components/AuthCheck';
 
 const Login = () => {
   const auth = useAuth();
@@ -33,56 +34,58 @@ const Login = () => {
   };
 
   return (
-    <Flex justify="center" h="100vh">
-      <Flex direction="column" w="50%" justify="center" align="center">
-        <Heading>Welcome Back!</Heading>
+    <AuthCheck isRequired={false}>
+      <Flex justify="center" h="100vh">
+        <Flex direction="column" w="50%" justify="center" align="center">
+          <Heading>Welcome Back!</Heading>
+        </Flex>
+        <Flex direction="column" w="50%" justify="center" align="center">
+          <Box as="form" w="sm" onSubmit={handleSubmit(onSubmit)}>
+            <FormControl isInvalid={errors.email}>
+              <FormLabel id="email-label" htmlFor="email">
+                Email
+              </FormLabel>
+              <Input
+                mb={2}
+                id="email"
+                type="text"
+                {...register('email')}
+                placeholder="your.email@myspace.com"
+              />
+              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.password}>
+              <FormLabel id="password-label" htmlFor="password">
+                Password
+              </FormLabel>
+              <Input
+                id="password"
+                mb={2}
+                type="password"
+                {...register('password')}
+                placeholder="•••••••"
+              />
+              <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+            </FormControl>
+            <Button
+              mt={4}
+              w="full"
+              colorScheme="blue"
+              isLoading={isSubmitting}
+              type="submit"
+            >
+              Log In
+            </Button>
+          </Box>
+          <Text mt={4} fontSize="sm" fontWeight="medium" color="gray.600">
+            Don&#39;t have an account?{' '}
+            <NextLink href="/signup" passHref>
+              <Link color="red.600">Sign Up!</Link>
+            </NextLink>
+          </Text>
+        </Flex>
       </Flex>
-      <Flex direction="column" w="50%" justify="center" align="center">
-        <Box as="form" w="sm" onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={errors.email}>
-            <FormLabel id="email-label" htmlFor="email">
-              Email
-            </FormLabel>
-            <Input
-              mb={2}
-              id="email"
-              type="text"
-              {...register('email')}
-              placeholder="your.email@myspace.com"
-            />
-            <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={errors.password}>
-            <FormLabel id="password-label" htmlFor="password">
-              Password
-            </FormLabel>
-            <Input
-              id="password"
-              mb={2}
-              type="password"
-              {...register('password')}
-              placeholder="•••••••"
-            />
-            <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-          </FormControl>
-          <Button
-            mt={4}
-            w="full"
-            colorScheme="blue"
-            isLoading={isSubmitting}
-            type="submit"
-          >
-            Log In
-          </Button>
-        </Box>
-        <Text mt={4} fontSize="sm" fontWeight="medium" color="gray.600">
-          Don&#39;t have an account?{' '}
-          <NextLink href="/signup" passHref>
-            <Link color="red.600">Sign Up!</Link>
-          </NextLink>
-        </Text>
-      </Flex>
-    </Flex>
+    </AuthCheck>
   );
 };
 

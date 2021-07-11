@@ -1,6 +1,7 @@
 import { SimpleGrid } from '@chakra-ui/react';
 
 import { firestore as db } from '@/utils/firebase';
+import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 
@@ -29,7 +30,7 @@ export const getStaticProps = async () => {
 // todo: work on image layout implementation
 const Catalog = ({ catalog }) => {
   return (
-    <>
+    <AuthCheck>
       <Navbar />
       <SimpleGrid columns={5} spacing={8} p={8} pl={64}>
         {catalog.map((item) => (
@@ -39,7 +40,7 @@ const Catalog = ({ catalog }) => {
       {catalog.map((item) => (
         <pre key={item.title}>{JSON.stringify(item, null, 2)}</pre>
       ))}
-    </>
+    </AuthCheck>
   );
 };
 
