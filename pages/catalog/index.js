@@ -7,7 +7,7 @@ import Thumbnail from '@/components/Thumbnail';
 
 export const getStaticProps = async () => {
   const catalogRef = db.collection('catalog');
-  // todo: abstract this to a helper function
+  // todo: abstract this to a helper function, also in [slug].js
   const catalog = (await catalogRef.get()).docs.map((doc) => doc.data());
 
   // todo: error handling
