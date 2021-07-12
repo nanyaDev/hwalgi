@@ -3,16 +3,17 @@ import { firestore as db } from '@/utils/firebase';
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
-import { Box, Heading } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/react';
 
-// ? what does fallback: true do
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
   const catalog = (await catalogRef.get()).docs.map((doc) => doc.data());
 
   const paths = catalog.map((item) => ({ params: { slug: item.slug } }));
 
-  return { paths, fallback: true };
+  // ? why does fallback: true break build
+  // ? cf: https://nextjs.org/docs/basic-features/data-fetching#the-fallback-key-required
+  return { paths, fallback: false };
 };
 
 export const getStaticProps = async ({ params }) => {
@@ -34,6 +35,7 @@ export const getStaticProps = async ({ params }) => {
 };
 
 const CatalogItem = ({ item }) => {
+  console.log('ITEM IS:', item);
   return (
     <AuthCheck>
       <Navbar />
