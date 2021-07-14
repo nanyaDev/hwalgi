@@ -1,4 +1,12 @@
-import { Flex, Button, Stack, Heading } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Stack,
+  Heading,
+  Box,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
 
 const Landing = () => (
@@ -13,8 +21,22 @@ const Landing = () => (
         <Button as="a">Sign Up</Button>
       </NextLink>
     </Stack>
-    <Flex grow={1} justify="center" align="center">
-      <Heading>Welcome to Hwalgi</Heading>
+    <Flex grow={1} direction="column" justify="center" align="center">
+      <Heading color="gray.700" size="4xl" textAlign="left" m={8}>
+        Learn{' '}
+        <Box
+          as="span"
+          bgGradient="linear(to right, blue.600, purple.400, red.500)"
+          bgClip="text"
+        >
+          Korean
+        </Box>{' '}
+        with <br /> the content you love
+      </Heading>
+      <Text color="gray.500" fontSize="2xl" textAlign="left">
+        An immersion based approach that forgoes the tedious textbooks, <br />
+        contrived wordlists, and expensive course fees.
+      </Text>
     </Flex>
   </>
 );
