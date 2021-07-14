@@ -35,7 +35,6 @@ export const getStaticProps = async ({ params }) => {
 };
 
 const CatalogItem = ({ item }) => {
-  console.log('ITEM IS:', item);
   return (
     <AuthCheck>
       <Navbar />

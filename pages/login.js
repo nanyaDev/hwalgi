@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // prettier-ignore
@@ -35,12 +36,25 @@ const Login = () => {
 
   return (
     <AuthCheck isRequired={false}>
-      <Flex justify="center" h="100vh">
+      <Flex grow={1} justify="center">
         <Flex direction="column" w="50%" justify="center" align="center">
-          <Heading>Welcome Back!</Heading>
+          <Image src="/login.svg" width={500} height={500} alt="" />
         </Flex>
         <Flex direction="column" w="50%" justify="center" align="center">
-          <Box as="form" w="sm" onSubmit={handleSubmit(onSubmit)}>
+          <Heading color="gray.700" m={4}>
+            Welcome Back! 👋
+          </Heading>
+          <Box
+            as="form"
+            w="sm"
+            border="1px"
+            borderColor="gray.50"
+            rounded="lg"
+            boxShadow="md"
+            bg="white"
+            p={6}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <FormControl isInvalid={errors.email}>
               <FormLabel id="email-label" htmlFor="email">
                 Email
@@ -50,7 +64,7 @@ const Login = () => {
                 id="email"
                 type="text"
                 {...register('email')}
-                placeholder="your.email@myspace.com"
+                placeholder="example@domain.com"
               />
               <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
             </FormControl>
