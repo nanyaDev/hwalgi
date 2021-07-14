@@ -28,11 +28,12 @@ export const getStaticProps = async () => {
 };
 
 // todo: make the grid responsive
+// ? might be a good idea to move navbar and gray.50 bg to a shell
 const Catalog = ({ catalog }) => {
   return (
     <AuthCheck>
       <Navbar />
-      <SimpleGrid columns={6} spacing={8} p={8}>
+      <SimpleGrid columns={6} spacing={4} px={40} py={8} bg="gray.50">
         {catalog.map((item) => (
           <Thumbnail key={item.tmdbID} item={item} />
         ))}

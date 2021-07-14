@@ -11,7 +11,14 @@ const Navbar = () => {
   const auth = useAuth();
 
   return (
-    <Flex justify="space-between" px={8} py={4}>
+    <Flex
+      justify="space-between"
+      align="center"
+      px={8}
+      py={2}
+      borderBottom="1px"
+      borderColor="gray.200"
+    >
       <NextLink href="/" passHref>
         <Box as="a" pos="relative">
           <Image src="/logo.png" width={40} height={40} alt="logo" />

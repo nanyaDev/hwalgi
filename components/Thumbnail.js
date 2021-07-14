@@ -8,11 +8,15 @@ const Thumbnail = ({ item }) => {
     <NextLink href={`/catalog/${item.slug}`} passHref>
       <Box
         as="a"
-        w="160px"
-        h="240px"
+        w="140px"
+        h="210px"
         borderRadius="md"
         overflow="hidden"
         pos="relative"
+        // boxShadow="2xl"
+        border="1px"
+        borderColor="gray.300"
+        boxShadow="0px 3px 0px 0px var(--chakra-colors-gray-300)"
       >
         <Image
           src={item.posterURL}
