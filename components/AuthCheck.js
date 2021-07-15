@@ -9,7 +9,6 @@ const AuthCheck = ({ children, isRequired = true }) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(isRequired, auth?.user);
     if (isRequired && auth.user === false) router.push('/landing');
     if (!isRequired && auth.user) router.push('/');
   }, [auth, router, isRequired]);
