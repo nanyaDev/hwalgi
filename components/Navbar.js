@@ -44,7 +44,7 @@ const Navbar = () => {
 
 const ButtonLink = ({ href, children }) => (
   <NextLink href={href} passHref>
-    <Button as="a" variant="ghost">
+    <Button as="a" variant="ghost" color="gray.700">
       {children}
     </Button>
   </NextLink>

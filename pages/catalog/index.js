@@ -15,12 +15,12 @@ export const getStaticProps = async () => {
   // todo: error handling
   await Promise.all(
     catalog.map(async (item) => {
-      const request = `https://api.themoviedb.org/3/${item.type}/${item.tmdbID}/images?api_key=${process.env.TMDB_API_KEY}`;
+      const request = `https://api.themoviedb.org/3/${item.type}/${item.tmdbID}?api_key=${process.env.TMDB_API_KEY}&language=en`;
       const response = await fetch(request);
       const data = await response.json();
-      const posterFilePath = data.posters[0].file_path;
+
       // todo: get api base url from coniguration (cf. api docs)
-      item.posterURL = `https://image.tmdb.org/t/p/w500${posterFilePath}`;
+      item.posterURL = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
     })
   );
 
@@ -72,7 +72,7 @@ const Catalog = ({ catalog }) => {
       />
       <SimpleGrid columns={6} spacing={4} px={40} bg="gray.50">
         {catalogToShow.map((item) => (
-          <Thumbnail key={item.tmdbID} item={item} />
+          <Thumbnail key={item.tmdbID} item={item} w="140px" h="210px" />
         ))}
       </SimpleGrid>
       {/* {catalog.map((item) => (
