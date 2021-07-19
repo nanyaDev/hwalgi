@@ -12,7 +12,7 @@ const Dashboard = () => {
   return (
     <AuthCheck>
       <Navbar />
-      <Flex grow={1} px={8} py={4} justify="space-between">
+      <Flex grow={1} justify="space-between" bg="gray.50" px={8} py={4}>
         <Flex grow={1} direction="column" justify="space-between">
           <Forecast />
           <HeatMap />
