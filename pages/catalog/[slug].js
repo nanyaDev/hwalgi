@@ -4,7 +4,15 @@ import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import LessonGenerator from '@/components/LessonGenerator';
-import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -67,7 +75,15 @@ const CatalogItem = ({ item, credits }) => {
     <AuthCheck>
       <Navbar />
       <Flex grow={1} justify="space-between" px={12} py={8} bg="gray.50">
-        <Thumbnail item={item} w="250px" h="375px" />
+        <VStack spacing={5}>
+          <Thumbnail item={item} w="250px" h="375px" />
+          <Button w="full" colorScheme="blackAlpha">
+            Watch Trailer
+          </Button>
+          <Button w="full" colorScheme="red">
+            Watch on Netflix
+          </Button>
+        </VStack>
         <VStack px={6} py={2} align="flex-start" spacing={4}>
           <VStack align="flex-start" spacing={1}>
             <HStack align="flex-end" spacing={2}>
@@ -97,8 +113,10 @@ const CatalogItem = ({ item, credits }) => {
           <Box>
             {credits.cast.map((actor) => (
               <Flex key={actor.id} justify="space-between">
-                <Text>{actor.name}</Text>
-                <Text>{actor.char}</Text>
+                <Text fontWeight="medium" color="gray.700" pr={8}>
+                  {actor.name}
+                </Text>
+                <Text color="gray.500">{actor.char}</Text>
               </Flex>
             ))}
           </Box>
