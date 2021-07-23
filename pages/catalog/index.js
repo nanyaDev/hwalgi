@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SimpleGrid } from '@chakra-ui/react';
+import { Box, SimpleGrid } from '@chakra-ui/react';
 
 import { firestore as db } from '@/utils/firebase';
 import AuthCheck from '@/components/AuthCheck';
@@ -65,16 +65,18 @@ const Catalog = ({ catalog }) => {
   return (
     <AuthCheck>
       <Navbar />
-      <CatalogFilter
-        updateFilter={updateFilter}
-        updateSearch={updateSearch}
-        clearFilters={clearFilters}
-      />
-      <SimpleGrid columns={6} spacing={4} px={40} bg="gray.50">
-        {catalogToShow.map((item) => (
-          <Thumbnail key={item.tmdbID} item={item} w="140px" h="210px" />
-        ))}
-      </SimpleGrid>
+      <Box flexGrow={1} bg="gray.50">
+        <CatalogFilter
+          updateFilter={updateFilter}
+          updateSearch={updateSearch}
+          clearFilters={clearFilters}
+        />
+        <SimpleGrid columns={6} spacing={4} px={40}>
+          {catalogToShow.map((item) => (
+            <Thumbnail key={item.tmdbID} item={item} w="140px" h="210px" />
+          ))}
+        </SimpleGrid>
+      </Box>
       {/* {catalog.map((item) => (
         <pre key={item.title}>{JSON.stringify(item, null, 2)}</pre>
       ))} */}

@@ -4,7 +4,6 @@ import { ChevronDownIcon, SearchIcon, SmallCloseIcon } from '@chakra-ui/icons';
 // prettier-ignore
 import { Button, HStack, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList, } from '@chakra-ui/react';
 
-// todo: fix the weird way bg="gray.50" is implemented
 // todo: implement 'Lists' logic
 const CatalogFilter = ({ updateFilter, clearFilters, updateSearch }) => {
   const filters = [
@@ -35,7 +34,7 @@ const CatalogFilter = ({ updateFilter, clearFilters, updateSearch }) => {
   };
 
   return (
-    <HStack justify="space-between" bg="gray.50" px={40} py={6}>
+    <HStack justify="space-between" px={40} py={6}>
       <InputGroup w="sm">
         <InputLeftElement pointerEvents="none">
           <SearchIcon color="gray.300" />
