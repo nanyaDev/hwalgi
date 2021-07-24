@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 // prettier-ignore
-import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack } from '@chakra-ui/react';
+import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
 const Landing = () => (
@@ -76,7 +76,7 @@ const Catalog = () => (
       Catalog
     </NumberMarker>
     <HStack h="80vh">
-      <Box w="50%" h="full" bg="gray.200" p={8}></Box>
+      <CatalogMockup />
       <Flex direction="column" w="50%" h="full" justify="space-evenly" px={8}>
         <Box>
           <Heading size="md" color="gray.700">
@@ -101,7 +101,7 @@ const Catalog = () => (
           </Heading>
           <Text color="gray.600">
             Already started learning Korean? You can import known words from
-            Duolingo, TTMIK, and Anki
+            Duolingo, TTMIK, and Anki.
           </Text>
         </Box>
       </Flex>
@@ -155,7 +155,7 @@ const Reviews = () => (
           <Text color="gray.600">
             Reviews for each word are automatically scheduled at the optimal
             time, so you can spend less time with flashcards and more time
-            engaging with native content
+            engaging with native content.
           </Text>
         </Box>
         <Box>
@@ -163,7 +163,7 @@ const Reviews = () => (
             Instant Feedback
           </Heading>
           <Text color="gray.600">
-            Type in your answers and they&#39;ll be automatically graded
+            Type in your answers and they&#39;ll be automatically graded.
           </Text>
         </Box>
       </Flex>
@@ -216,5 +216,43 @@ const NumberMarker = ({ children, num, startColor, endColor, ...rest }) => {
     </VStack>
   );
 };
+
+const CatalogMockup = () => (
+  <Box w="50%" h="full" pos="relative">
+    <MockupShell pos="absolute" left={0} top={4}>
+      <Skeleton h="15px" speed={2} startColor="gray.300" mb={4} />
+      <SimpleGrid flexGrow={1} columns={6} rows={2} spacing={4}>
+        {[...Array(12)].map((_, i) => (
+          <Skeleton key={i} h="full" speed={2} startColor="gray.300" />
+        ))}
+      </SimpleGrid>
+    </MockupShell>
+    <MockupShell pos="absolute" right={1} bottom={8}></MockupShell>
+  </Box>
+);
+
+// ? ...props bad practice
+const MockupShell = ({ children, ...props }) => (
+  <Flex
+    {...props}
+    direction="column"
+    w="475px"
+    h="300px"
+    bgColor="white"
+    borderRadius="md"
+    boxShadow="0 30px 60px 0 rgba(0, 0, 0, 0.12)"
+  >
+    <Flex h="36px" borderBottom="1px" borderColor="gray.200">
+      <HStack ml="12px">
+        <Box as="span" boxSize="12px" borderRadius="100%" bgColor="#ff5f56" />
+        <Box as="span" boxSize="12px" borderRadius="100%" bgColor="#ffbd2e" />
+        <Box as="span" boxSize="12px" borderRadius="100%" bgColor="#27c93f" />
+      </HStack>
+    </Flex>
+    <Flex grow={1} direction="column" px="10%" py="8%">
+      {children}
+    </Flex>
+  </Flex>
+);
 
 export default Landing;
