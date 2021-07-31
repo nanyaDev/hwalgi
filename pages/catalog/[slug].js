@@ -1,3 +1,4 @@
+// todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
 
 import AuthCheck from '@/components/AuthCheck';
