@@ -1,9 +1,18 @@
-import { firestore } from '@/utils/fireadmin';
+import admin, { fireauth, firestore } from '@/utils/fireadmin';
 
 const handler = async (req, res) => {
-  // ? what if this fails, there will be entry in firebase auth but not firestore
+  // ? what if this fails, there will be entry in firebase auth but not in firestore
   if (req.method === 'POST') {
-    firestore.collection('users').doc(uid).set(data);
+    const { uid, email } = await fireauth.verifyIdToken(req.headers.token);
+
+    const data = {
+      email,
+      created: admin.firestore.FieldValue.serverTimestamp(),
+      access: 'basic',
+    };
+
+    await firestore.collection('users').doc(uid).set(data);
+    res.status(200).json(data);
   }
 
   if (req.method === 'GET') {
