@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
 
+// There are some weird gotchas when copying the private_key envvar to vercel
+// cf. https://github.com/vercel/vercel/issues/749#issuecomment-707515089
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
