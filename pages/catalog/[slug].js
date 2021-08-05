@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 // todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
 
@@ -14,6 +15,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import VideoModal from '@/components/VideoModal';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -65,25 +68,32 @@ export const getStaticProps = async ({ params }) => {
       .map((p) => p.name),
   };
 
+  const videosRequest = `https://api.themoviedb.org/3/${item.type}/${item.tmdbID}/videos?api_key=${process.env.TMDB_API_KEY}&language=en`;
+  const videosResponse = await fetch(videosRequest);
+  const videosData = await videosResponse.json();
+
+  const video = videosData.results.find(
+    (video) => video.type === 'Trailer' && video.site === 'YouTube'
+  );
+  const trailer = video.key;
+
   return {
-    props: { item, credits },
+    props: { item, credits, trailer },
   };
 };
 
 // ? why does credits.director work even though it's an array
-const CatalogItem = ({ item, credits }) => {
+const CatalogItem = ({ item, credits, trailer }) => {
   return (
     <AuthCheck>
       <Navbar />
       <Flex grow={1} justify="space-between" px={12} py={8} bg="gray.50">
         <VStack spacing={5}>
           <Thumbnail item={item} w="250px" h="375px" />
-          <Button w="full" colorScheme="blackAlpha">
-            Watch Trailer
-          </Button>
-          <Button w="full" colorScheme="red">
+          <Button w="full" colorScheme="red" rightIcon={<ExternalLinkIcon />}>
             Watch on Netflix
           </Button>
+          <VideoModal trailer={trailer}>Watch Trailer</VideoModal>
         </VStack>
         <VStack px={6} py={2} align="flex-start" spacing={4}>
           <VStack align="flex-start" spacing={1}>
