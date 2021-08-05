@@ -75,7 +75,8 @@ export const getStaticProps = async ({ params }) => {
   const video = videosData.results.find(
     (video) => video.type === 'Trailer' && video.site === 'YouTube'
   );
-  const trailer = video.key;
+  // todo: make sure everything has a trailer
+  const trailer = video?.key || null;
 
   return {
     props: { item, credits, trailer },
@@ -93,7 +94,7 @@ const CatalogItem = ({ item, credits, trailer }) => {
           <Button w="full" colorScheme="red" rightIcon={<ExternalLinkIcon />}>
             Watch on Netflix
           </Button>
-          <VideoModal trailer={trailer}>Watch Trailer</VideoModal>
+          {trailer && <VideoModal trailer={trailer}>Watch Trailer</VideoModal>}
         </VStack>
         <VStack px={6} py={2} align="flex-start" spacing={4}>
           <VStack align="flex-start" spacing={1}>
