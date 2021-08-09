@@ -668,6 +668,7 @@ export const mockReviews = [
     end: 8,
     definitions: ['sleep'],
     alt: ['stop', 'be flattened', 'have sex'],
+    title: 'Parasite',
   },
   {
     sentenceId: null,
@@ -678,6 +679,7 @@ export const mockReviews = [
     end: 3,
     definitions: ['mobile phone', 'cellular phone'],
     alt: [],
+    title: 'Parasite',
   },
   {
     sentenceId: null,
@@ -688,6 +690,7 @@ export const mockReviews = [
     end: 11,
     definitions: ['complete', 'finish'],
     alt: ['cut off'],
+    title: 'Parasite',
   },
   {
     sentenceId: null,
@@ -698,6 +701,7 @@ export const mockReviews = [
     end: 19,
     definitions: ['know', 'understand'],
     alt: ['realize', 'care about'],
+    title: 'Parasite',
   },
   {
     sentenceId: null,
@@ -708,5 +712,6 @@ export const mockReviews = [
     end: 4,
     definitions: ['neighbourhood', 'village'],
     alt: [],
+    title: 'Parasite',
   },
 ];
