@@ -1,22 +1,13 @@
-import NextLink from 'next/link';
 // todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
+// prettier-ignore
+import { Box, Flex, Heading, HStack, Icon, IconButton, Text, VStack } from '@chakra-ui/react';
+import { FaHeart, FaBookmark } from 'react-icons/fa';
 
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
-import LessonGenerator from '@/components/LessonGenerator';
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
 import VideoModal from '@/components/VideoModal';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -61,7 +52,7 @@ export const getStaticProps = async ({ params }) => {
   // todo: make this less obscure
   const credits = {
     cast: creditsData.cast
-      .filter((person) => person.order <= 4)
+      .filter((person) => person.order <= 3)
       .map((p) => ({ name: p.name, id: p.id, char: p.character })),
     director: creditsData.crew
       .filter((person) => person.job === 'Director')
@@ -88,15 +79,16 @@ const CatalogItem = ({ item, credits, trailer }) => {
   return (
     <AuthCheck>
       <Navbar />
-      <Flex grow={1} justify="space-between" px={12} py={8} bg="gray.50">
-        <VStack spacing={5}>
-          <Thumbnail item={item} w="250px" h="375px" />
-          <Button w="full" colorScheme="red" rightIcon={<ExternalLinkIcon />}>
-            Watch on Netflix
-          </Button>
-          {trailer && <VideoModal trailer={trailer}>Watch Trailer</VideoModal>}
-        </VStack>
-        <VStack px={6} py={2} align="flex-start" spacing={4}>
+      <HStack
+        flexGrow={1}
+        align="flex-start"
+        spacing={8}
+        px={36}
+        pt={8}
+        bg="gray.50"
+      >
+        <Thumbnail item={item} w="250px" h="375px" />
+        <Flex h="375px" px={6} direction="column" justify="space-evenly">
           <VStack align="flex-start" spacing={1}>
             <HStack align="flex-end" spacing={2}>
               <Heading size="lg" color="gray.700">
@@ -106,35 +98,53 @@ const CatalogItem = ({ item, credits, trailer }) => {
                 {item.koreanTitle}
               </Heading>
             </HStack>
-            <HStack spacing={4}>
-              <Text fontWeight="medium">{item.year.slice(0, 4)}</Text>
-              <Box>
-                <Text as="span" color="gray.500" fontSize="sm">
-                  Directed by{' '}
-                </Text>
-                <Text as="span" fontWeight="medium">
-                  {credits.director}
-                </Text>
-              </Box>
-            </HStack>
+            <Text fontWeight="medium" casing="capitalize">
+              {item.type}, {item.year.slice(0, 4)}
+            </Text>
           </VStack>
-          <Text casing="uppercase" letterSpacing="wider" fontSize="sm">
-            {item.tagline}
-          </Text>
-          <Text>{item.overview}</Text>
+          <HStack spacing={4}>
+            <IconButton
+              icon={<FaHeart />}
+              variant="outline"
+              borderRadius="full"
+              color="gray.200"
+              aria-label="favorite"
+            />
+            <IconButton
+              icon={<FaBookmark />}
+              variant="outline"
+              borderRadius="full"
+              color="gray.200"
+              aria-label="bookmark"
+            />
+            {trailer && <VideoModal trailer={trailer}>Play Trailer</VideoModal>}
+          </HStack>
           <Box>
-            {credits.cast.map((actor) => (
-              <Flex key={actor.id} justify="space-between">
-                <Text fontWeight="medium" color="gray.700" pr={8}>
-                  {actor.name}
-                </Text>
-                <Text color="gray.500">{actor.char}</Text>
-              </Flex>
-            ))}
+            <Text casing="uppercase" letterSpacing="wider" fontSize="sm" mb={4}>
+              {item.tagline}
+            </Text>
+            <Text>{item.overview}</Text>
           </Box>
-        </VStack>
-        <LessonGenerator />
-      </Flex>
+          <HStack spacing={6}>
+            <Box>
+              <Text fontWeight="semibold" color="gray.500">
+                Director
+              </Text>
+              <Text fontWeight="semibold" color="gray.500">
+                Cast
+              </Text>
+            </Box>
+            <Box>
+              <Text color="gray.500">{credits.director}</Text>
+              {credits.cast.map((actor) => (
+                <Text as="span" key={actor.id} color="gray.500">
+                  {actor.name},{' '}
+                </Text>
+              ))}
+            </Box>
+          </HStack>
+        </Flex>
+      </HStack>
     </AuthCheck>
   );
 };

@@ -1,5 +1,6 @@
 // prettier-ignore
-import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, } from '@chakra-ui/react';
+import { Button, Icon, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure, } from '@chakra-ui/react';
+import { FaPlay } from 'react-icons/fa';
 
 const VideoModal = ({ children, trailer }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -7,7 +8,12 @@ const VideoModal = ({ children, trailer }) => {
   // ? the size="6xl" on modal is weird
   return (
     <>
-      <Button onClick={onOpen} color="gray.500" variant="outline">
+      <Button
+        onClick={onOpen}
+        color="gray.500"
+        variant="ghost"
+        leftIcon={<Icon as={FaPlay} />}
+      >
         {children}
       </Button>
 
