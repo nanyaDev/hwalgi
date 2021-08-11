@@ -5,6 +5,7 @@ import { Button, Flex, FormControl, FormLabel, Input, Kbd, Switch, Text, } from 
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import { mockReviews } from '@/utils/mockData';
+import useKey from '@/lib/useKey';
 
 // card layout uses auto margins on the TitleBar and Buttons
 // cf. https://stackoverflow.com/questions/32551291/
@@ -27,11 +28,6 @@ const Lessons = () => {
     setValue(e.target.value);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') handleRetry();
-    if (e.key === 'Enter') handleSubmit();
-  };
-
   const handleSubmit = () => {
     if (review.definitions.includes(value)) {
       setIndex(index + 1);
@@ -42,6 +38,9 @@ const Lessons = () => {
   const handleRetry = () => {
     setValue('');
   };
+
+  useKey('Enter', handleSubmit);
+  useKey('Escape', handleRetry);
 
   return (
     <AuthCheck>
@@ -72,7 +71,6 @@ const Lessons = () => {
             w="md"
             value={value}
             onChange={handleInput}
-            onKeyDown={handleKeyDown}
           />
           <Buttons handleRetry={handleRetry} handleSubmit={handleSubmit} />
         </Card>
