@@ -698,7 +698,7 @@ export const mockReviews = [
     translation: 'How do you know all those details?',
     term: '알다',
     start: 19,
-    end: 19,
+    end: 20,
     definitions: ['know', 'understand'],
     alt: ['realize', 'care about'],
     title: 'Parasite',

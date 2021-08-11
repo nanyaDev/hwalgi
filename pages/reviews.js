@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // prettier-ignore
-import { Button, Flex, FormControl, FormLabel, Input, Kbd, Switch, Text, } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, FormControl, FormLabel, Input, Kbd, Switch, Text, } from '@chakra-ui/react';
 
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
@@ -14,6 +14,7 @@ const Lessons = () => {
   const [index, setIndex] = useState(0);
   const [context, setContext] = useState(true);
   const [value, setValue] = useState('');
+  // ? maybe combine error and success into one three value boolean
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -28,20 +29,34 @@ const Lessons = () => {
     setValue(e.target.value);
   };
 
+  // todo: error should push the failed item back
   const handleSubmit = () => {
-    if (review.definitions.includes(value)) {
-      setIndex(index + 1);
+    if (success || error) {
+      setSuccess(false);
+      setError(false);
       setValue('');
+      setIndex(index + 1);
+      return;
+    }
+
+    if (review.definitions.includes(value)) {
+      setSuccess(true);
+    } else {
+      setError(true);
     }
   };
 
+  // todo: disable retry for success and remove setSuccess below
   const handleRetry = () => {
+    setSuccess(false);
+    setError(false);
     setValue('');
   };
 
   useKey('Enter', handleSubmit);
   useKey('Escape', handleRetry);
 
+  // todo: abstract error/success message to component
   return (
     <AuthCheck>
       <Navbar />
@@ -63,15 +78,38 @@ const Lessons = () => {
           ) : (
             <Term term={review.term} />
           )}
-          <Input
-            size="lg"
-            variant="flushed"
-            textAlign="center"
-            placeholder="Your Response"
-            w="md"
-            value={value}
-            onChange={handleInput}
-          />
+          {error || success ? (
+            <Center w="md" h={12} borderBottom="1px" borderColor="gray.200">
+              <Text
+                align="center"
+                fontSize="18px"
+                color={success ? 'green.500' : 'red.500'}
+              >
+                {value}
+              </Text>
+              {error && (
+                <>
+                  <Text align="center" fontSize="18px" color="gray.500" mx={1}>
+                    →
+                  </Text>
+                  <Text align="center" fontSize="18px" color="green.500">
+                    {review.definitions[0]}
+                  </Text>
+                </>
+              )}
+            </Center>
+          ) : (
+            <Input
+              size="lg"
+              variant="flushed"
+              textAlign="center"
+              placeholder="Your Response"
+              w="md"
+              autoFocus
+              value={value}
+              onChange={handleInput}
+            />
+          )}
           <Buttons handleRetry={handleRetry} handleSubmit={handleSubmit} />
         </Card>
       </Shell>
