@@ -1,21 +1,13 @@
 import { useState } from 'react';
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
-  Kbd,
-  Switch,
-  Text,
-} from '@chakra-ui/react';
+// prettier-ignore
+import { Button, Flex, FormControl, FormLabel, Input, Kbd, Switch, Text, } from '@chakra-ui/react';
 
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import { mockReviews } from '@/utils/mockData';
 
+// card layout uses auto margins on the TitleBar and Buttons
+// cf. https://stackoverflow.com/questions/32551291/
 // todo: abstract background to shell
 const Lessons = () => {
   const [index, setIndex] = useState(0);
@@ -55,34 +47,33 @@ const Lessons = () => {
     <AuthCheck>
       <Navbar />
       <Shell>
-        <Card
-          title={review.title}
-          index={index}
-          totalCount={reviews.length}
-          context={context}
-          handleContext={handleContext}
-        >
-          <Box>
-            {context ? (
-              <Sentence
-                sentence={review.sentence}
-                start={review.start}
-                end={review.end}
-              />
-            ) : (
-              <Term term={review.term} />
-            )}
-            <Input
-              size="lg"
-              variant="flushed"
-              textAlign="center"
-              mb={12}
-              placeholder="Your Response"
-              value={value}
-              onChange={handleInput}
-              onKeyDown={handleKeyDown}
+        <Card>
+          <TitleBar
+            title={review.title}
+            index={index}
+            totalCount={reviews.length}
+            context={context}
+            handleContext={handleContext}
+          />
+          {context ? (
+            <Sentence
+              sentence={review.sentence}
+              start={review.start}
+              end={review.end}
             />
-          </Box>
+          ) : (
+            <Term term={review.term} />
+          )}
+          <Input
+            size="lg"
+            variant="flushed"
+            textAlign="center"
+            placeholder="Your Response"
+            w="md"
+            value={value}
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+          />
           <Buttons handleRetry={handleRetry} handleSubmit={handleSubmit} />
         </Card>
       </Shell>
@@ -103,14 +94,8 @@ const Shell = ({ children }) => (
 );
 
 // todo: fix minW="200px" hacky solution to center title
-const Card = ({
-  children,
-  title,
-  index,
-  totalCount,
-  context,
-  handleContext,
-}) => (
+// the margin: auto trick might work
+const Card = ({ children }) => (
   <Flex
     h="450px"
     w="700px"
@@ -121,46 +106,49 @@ const Card = ({
     border="1px"
     borderColor="gray.100"
   >
-    <Flex justify="space-between" p={4}>
-      <FormControl
-        minW="200px"
-        display="flex"
-        w="fit-content"
-        alignItems="center"
-      >
-        <Switch
-          id="context"
-          size="sm"
-          isChecked={context}
-          onChange={handleContext}
-          mr={2}
-        />
-        <FormLabel
-          htmlFor="context"
-          fontSize="sm"
-          fontWeight="bold"
-          color="gray.400"
-          mb="0"
-        >
-          Context
-        </FormLabel>
-      </FormControl>
-      <Text fontSize="md" fontWeight="bold" color="gray.500">
-        {title}
-      </Text>
-      <Text
-        minW="200px"
-        fontSize="sm"
-        fontWeight="bold"
-        textAlign="right"
-        color="gray.400"
-      >
-        {index} / {totalCount}
-      </Text>
-    </Flex>
-    <Flex grow={1} px={32} pb={8} direction="column" justify="center">
+    <Flex grow={1} direction="column" justify="center" align="center">
       {children}
     </Flex>
+  </Flex>
+);
+
+const TitleBar = ({ title, index, totalCount, context, handleContext }) => (
+  <Flex alignSelf="stretch" justify="space-between" p={4} mb="auto">
+    <FormControl
+      minW="200px"
+      display="flex"
+      w="fit-content"
+      alignItems="center"
+    >
+      <Switch
+        id="context"
+        size="sm"
+        isChecked={context}
+        onChange={handleContext}
+        mr={2}
+      />
+      <FormLabel
+        htmlFor="context"
+        fontSize="sm"
+        fontWeight="bold"
+        color="gray.400"
+        mb="0"
+      >
+        Context
+      </FormLabel>
+    </FormControl>
+    <Text fontSize="md" fontWeight="bold" color="gray.500">
+      {title}
+    </Text>
+    <Text
+      minW="200px"
+      fontSize="sm"
+      fontWeight="bold"
+      textAlign="right"
+      color="gray.400"
+    >
+      {index} / {totalCount}
+    </Text>
   </Flex>
 );
 
@@ -193,7 +181,7 @@ const Term = ({ term }) => (
 );
 
 const Buttons = ({ handleRetry, handleSubmit }) => (
-  <Flex justify="space-between">
+  <Flex justify="space-between" mt="auto" mb={16} w="md">
     <Button
       variant="ghost"
       border="1px"
