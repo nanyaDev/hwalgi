@@ -3,6 +3,8 @@ import NextLink from 'next/link';
 import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 
+import Footer from '@/components/Footer';
+
 const Landing = () => (
   <>
     <AuthBar />
@@ -11,6 +13,7 @@ const Landing = () => (
     <Lessons />
     <Reviews />
     <CTA />
+    <Footer />
   </>
 );
 

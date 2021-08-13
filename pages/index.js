@@ -1,6 +1,5 @@
-import NextLink from 'next/link';
 // prettier-ignore
-import { Flex, Button  } from '@chakra-ui/react';
+import { Flex  } from '@chakra-ui/react';
 
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
