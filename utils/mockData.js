@@ -715,3 +715,102 @@ export const mockReviews = [
     title: 'Parasite',
   },
 ];
+
+export const mockWords = [
+  {
+    term: '하다',
+    definition: 'to do',
+  },
+  {
+    term: '있다',
+    definition: 'to be',
+  },
+  {
+    term: '지다',
+    definition: 'to become',
+  },
+  {
+    term: '말하다',
+    definition: 'to say',
+  },
+  {
+    term: '오다',
+    definition: 'to come',
+  },
+  {
+    term: '가다',
+    definition: 'to go',
+  },
+  {
+    term: '보다',
+    definition: 'to see',
+  },
+  {
+    term: '보내다',
+    definition: 'to send',
+  },
+  {
+    term: '가지다',
+    definition: 'to have',
+  },
+  {
+    term: '기다리다',
+    definition: 'to wait',
+  },
+  {
+    term: '만나다',
+    definition: 'to meet',
+  },
+  {
+    term: '살다',
+    definition: 'to live',
+  },
+  {
+    term: '생각하다',
+    definition: 'to think',
+  },
+  {
+    term: '주다',
+    definition: 'to give',
+  },
+  {
+    term: '받다',
+    definition: 'to receive',
+  },
+  {
+    term: '알다',
+    definition: 'to know',
+  },
+  {
+    term: '만들다',
+    definition: 'to make',
+  },
+  {
+    term: '사용하다',
+    definition: 'to use',
+  },
+  {
+    term: '배우다',
+    definition: 'to learn',
+  },
+  {
+    term: '먹다',
+    definition: 'to eat',
+  },
+  {
+    term: '마시다',
+    definition: 'to drink',
+  },
+  {
+    term: '웃다',
+    definition: 'to laugh',
+  },
+  {
+    term: '읽다',
+    definition: 'to read',
+  },
+  {
+    term: '쓰다',
+    definition: 'to write',
+  },
+];
