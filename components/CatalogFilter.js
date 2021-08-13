@@ -48,11 +48,7 @@ const CatalogFilter = ({ updateFilter, clearFilters, updateSearch }) => {
       </InputGroup>
       <HStack justify="flex-end" spacing={3}>
         {filters.map((props) => (
-          <DropDownMenu
-            key={props.name}
-            {...props}
-            updateFilter={updateFilter}
-          />
+          <DropDown key={props.name} {...props} updateFilter={updateFilter} />
         ))}
         <Button
           rightIcon={<SmallCloseIcon />}
@@ -67,7 +63,8 @@ const CatalogFilter = ({ updateFilter, clearFilters, updateSearch }) => {
   );
 };
 
-const DropDownMenu = ({ name, values, updateFilter }) => {
+// todo: chakra-ui's select element might be a better option (cf. ItemFilter)
+const DropDown = ({ name, values, updateFilter }) => {
   return (
     <Menu>
       <MenuButton

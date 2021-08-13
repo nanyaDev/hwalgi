@@ -1,3 +1,4 @@
+import { useState } from 'react';
 // todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
 // prettier-ignore
@@ -8,6 +9,7 @@ import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
+import ItemFilter from '@/components/ItemFilter';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -76,6 +78,15 @@ export const getStaticProps = async ({ params }) => {
 
 // ? why does credits.director work even though it's an array
 const CatalogItem = ({ item, credits, trailer }) => {
+  const [filters, setFilters] = useState({
+    sort: 'chronology',
+    filter: 'known',
+  });
+
+  const updateFilter = (filter, value) => {
+    setFilters({ ...filters, [filter]: value });
+  };
+
   return (
     <AuthCheck>
       <Navbar />
@@ -145,8 +156,20 @@ const CatalogItem = ({ item, credits, trailer }) => {
           </HStack>
         </Flex>
       </HStack>
+      <Box px={16}>
+        <Flex align="center" my={8}>
+          <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
+          <Text color="gray.600" fontWeight="medium" mx={6}>
+            Select some words to start learning
+          </Text>
+          <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
+        </Flex>
+        <ItemFilter updateFilter={updateFilter} />
+        <Box h={48} />
+      </Box>
     </AuthCheck>
   );
+  // ! remove testing box
 };
 
 export default CatalogItem;
