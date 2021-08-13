@@ -2,7 +2,7 @@ import { useState } from 'react';
 // todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
 // prettier-ignore
-import { Box, Flex, Heading, HStack, Icon, IconButton, Text, VStack } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
 
 import AuthCheck from '@/components/AuthCheck';
@@ -10,6 +10,7 @@ import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
 import ItemFilter from '@/components/ItemFilter';
+import { mockWords } from '@/utils/mockData';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -82,94 +83,139 @@ const CatalogItem = ({ item, credits, trailer }) => {
     sort: 'chronology',
     filter: 'known',
   });
+  const [words, setWords] = useState(mockWords);
 
   const updateFilter = (filter, value) => {
     setFilters({ ...filters, [filter]: value });
   };
 
+  // todo: this all seems very inefficient, with the grid rerendered every time
+  const selectWord = (term) => {
+    const copy = words.map((obj) => ({ ...obj })); // deep copy hack
+
+    // this seems suboptimal
+    const update = copy.map((word) => {
+      if (word.term === term) {
+        word.selected = word.selected === undefined ? true : !word.selected;
+      }
+
+      return word;
+    });
+
+    setWords(update);
+  };
+
+  // ? is it okay to use onMouseDown instead of onClick
   return (
     <AuthCheck>
       <Navbar />
-      <HStack
-        flexGrow={1}
-        align="flex-start"
-        spacing={8}
-        px={36}
-        pt={8}
-        bg="gray.50"
-      >
-        <Thumbnail item={item} w="250px" h="375px" />
-        <Flex h="375px" px={6} direction="column" justify="space-evenly">
-          <VStack align="flex-start" spacing={1}>
-            <HStack align="flex-end" spacing={2}>
-              <Heading size="lg" color="gray.700">
-                {item.title}
-              </Heading>
-              <Heading size="md" color="gray.500">
-                {item.koreanTitle}
-              </Heading>
+      <Flex direction="column" grow={1} bg="gray.50">
+        <HStack align="flex-start" spacing={8} px={36} pt={8}>
+          <Thumbnail item={item} w="250px" h="375px" />
+          <Flex h="375px" px={6} direction="column" justify="space-evenly">
+            <VStack align="flex-start" spacing={1}>
+              <HStack align="flex-end" spacing={2}>
+                <Heading size="lg" color="gray.700">
+                  {item.title}
+                </Heading>
+                <Heading size="md" color="gray.500">
+                  {item.koreanTitle}
+                </Heading>
+              </HStack>
+              <Text fontWeight="medium" casing="capitalize">
+                {item.type}, {item.year.slice(0, 4)}
+              </Text>
+            </VStack>
+            <HStack spacing={4}>
+              <IconButton
+                icon={<FaHeart />}
+                variant="outline"
+                borderRadius="full"
+                color="gray.200"
+                aria-label="favorite"
+              />
+              <IconButton
+                icon={<FaBookmark />}
+                variant="outline"
+                borderRadius="full"
+                color="gray.200"
+                aria-label="bookmark"
+              />
+              {trailer && (
+                <VideoModal trailer={trailer}>Play Trailer</VideoModal>
+              )}
             </HStack>
-            <Text fontWeight="medium" casing="capitalize">
-              {item.type}, {item.year.slice(0, 4)}
-            </Text>
-          </VStack>
-          <HStack spacing={4}>
-            <IconButton
-              icon={<FaHeart />}
-              variant="outline"
-              borderRadius="full"
-              color="gray.200"
-              aria-label="favorite"
-            />
-            <IconButton
-              icon={<FaBookmark />}
-              variant="outline"
-              borderRadius="full"
-              color="gray.200"
-              aria-label="bookmark"
-            />
-            {trailer && <VideoModal trailer={trailer}>Play Trailer</VideoModal>}
-          </HStack>
-          <Box>
-            <Text casing="uppercase" letterSpacing="wider" fontSize="sm" mb={4}>
-              {item.tagline}
-            </Text>
-            <Text>{item.overview}</Text>
-          </Box>
-          <HStack spacing={6}>
             <Box>
-              <Text fontWeight="semibold" color="gray.500">
-                Director
+              <Text
+                casing="uppercase"
+                letterSpacing="wider"
+                fontSize="sm"
+                mb={4}
+              >
+                {item.tagline}
               </Text>
-              <Text fontWeight="semibold" color="gray.500">
-                Cast
-              </Text>
+              <Text>{item.overview}</Text>
             </Box>
-            <Box>
-              <Text color="gray.500">{credits.director}</Text>
-              {credits.cast.map((actor) => (
-                <Text as="span" key={actor.id} color="gray.500">
-                  {actor.name},{' '}
+            <HStack spacing={6}>
+              <Box>
+                <Text fontWeight="semibold" color="gray.500">
+                  Director
                 </Text>
-              ))}
-            </Box>
-          </HStack>
-        </Flex>
-      </HStack>
-      <Box px={16}>
-        <Flex align="center" my={8}>
-          <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
-          <Text color="gray.600" fontWeight="medium" mx={6}>
-            Select some words to start learning
-          </Text>
-          <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
-        </Flex>
-        <ItemFilter updateFilter={updateFilter} />
-        <Box h={48} />
-      </Box>
+                <Text fontWeight="semibold" color="gray.500">
+                  Cast
+                </Text>
+              </Box>
+              <Box>
+                <Text color="gray.500">{credits.director}</Text>
+                {credits.cast.map((actor) => (
+                  <Text as="span" key={actor.id} color="gray.500">
+                    {actor.name},{' '}
+                  </Text>
+                ))}
+              </Box>
+            </HStack>
+          </Flex>
+        </HStack>
+        <Box px={16}>
+          <Flex align="center" my={12}>
+            <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
+            <Text color="gray.600" fontWeight="medium" mx={6}>
+              Select some words to start learning
+            </Text>
+            <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
+          </Flex>
+          <ItemFilter updateFilter={updateFilter} />
+          <SimpleGrid my={12} columns={6} spacing={10}>
+            {words.map(({ term, definition, selected }) => (
+              <Flex
+                key={term}
+                direction="column"
+                justify="center"
+                align="center"
+                w="180px"
+                h="100px"
+                bg="white"
+                border={selected ? '2px' : '1px'}
+                borderColor={selected ? 'blue.500' : 'gray.300'}
+                borderRadius="6px"
+                onMouseDown={() => selectWord(term)}
+              >
+                <Text
+                  fontSize="lg"
+                  fontWeight="semibold"
+                  color="gray.700"
+                  mb={1}
+                >
+                  {term}
+                </Text>
+                <Text fontWeight="light">{definition}</Text>
+              </Flex>
+            ))}
+          </SimpleGrid>
+        </Box>
+      </Flex>
     </AuthCheck>
   );
-  // ! remove testing box
 };
 
 export default CatalogItem;
