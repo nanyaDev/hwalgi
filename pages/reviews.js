@@ -6,24 +6,19 @@ import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 import { mockReviews } from '@/utils/mockData';
 import useKey from '@/lib/useKey';
+import useToggle from '@/lib/useToggle';
 
 // card layout uses auto margins on the TitleBar and Buttons
 // cf. https://stackoverflow.com/questions/32551291/
 // todo: abstract background to shell
 const Lessons = () => {
   const [index, setIndex] = useState(0);
-  const [context, setContext] = useState(true);
+  const [context, toggleContext] = useToggle(true);
   const [value, setValue] = useState('');
-  // ? maybe combine error and success into one three value boolean
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [grade, setGrade] = useState(null);
 
   const reviews = mockReviews;
   const review = reviews[index];
-
-  const handleContext = () => {
-    setContext(!context);
-  };
 
   const handleInput = (e) => {
     setValue(e.target.value);
@@ -31,25 +26,19 @@ const Lessons = () => {
 
   // todo: error should push the failed item back
   const handleSubmit = () => {
-    if (success || error) {
-      setSuccess(false);
-      setError(false);
+    if (grade !== null) {
+      setGrade(null);
       setValue('');
       setIndex(index + 1);
       return;
     }
 
-    if (review.definitions.includes(value)) {
-      setSuccess(true);
-    } else {
-      setError(true);
-    }
+    setGrade(review.definitions.includes(value));
   };
 
   // todo: disable retry for success and remove setSuccess below
   const handleRetry = () => {
-    setSuccess(false);
-    setError(false);
+    setGrade(null);
     setValue('');
   };
 
@@ -67,7 +56,7 @@ const Lessons = () => {
             index={index}
             totalCount={reviews.length}
             context={context}
-            handleContext={handleContext}
+            toggleContext={toggleContext}
           />
           {context ? (
             <Sentence
@@ -78,16 +67,16 @@ const Lessons = () => {
           ) : (
             <Term term={review.term} />
           )}
-          {error || success ? (
+          {grade !== null ? (
             <Center w="md" h={12} borderBottom="1px" borderColor="gray.200">
               <Text
                 align="center"
                 fontSize="18px"
-                color={success ? 'green.500' : 'red.500'}
+                color={grade ? 'green.500' : 'red.500'}
               >
                 {value}
               </Text>
-              {error && (
+              {grade === false && (
                 <>
                   <Text align="center" fontSize="18px" color="gray.500" mx={1}>
                     →
@@ -148,7 +137,7 @@ const Card = ({ children }) => (
   </Flex>
 );
 
-const TitleBar = ({ title, index, totalCount, context, handleContext }) => (
+const TitleBar = ({ title, index, totalCount, context, toggleContext }) => (
   <Flex alignSelf="stretch" justify="space-between" p={4} mb="auto">
     <FormControl
       minW="200px"
@@ -160,7 +149,7 @@ const TitleBar = ({ title, index, totalCount, context, handleContext }) => (
         id="context"
         size="sm"
         isChecked={context}
-        onChange={handleContext}
+        onChange={toggleContext}
         mr={2}
       />
       <FormLabel
