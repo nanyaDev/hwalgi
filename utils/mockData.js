@@ -658,7 +658,7 @@ export const barData = [
   { letter: 'R', frequency: 598 },
 ];
 
-export const mockReviews = [
+export const cardData = [
   {
     sentenceId: null,
     sentence: '이, 씨발, 자는 척하지 말고',

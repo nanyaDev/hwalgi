@@ -3,7 +3,7 @@ import { Flex, Heading, Input } from '@chakra-ui/react';
 import AuthCheck from '@/components/AuthCheck';
 import Navbar from '@/components/Navbar';
 
-const Reviews = () => {
+const Lessons = () => {
   return (
     <AuthCheck>
       <Navbar />
@@ -11,4 +11,4 @@ const Reviews = () => {
   );
 };
 
-export default Reviews;
+export default Lessons;
