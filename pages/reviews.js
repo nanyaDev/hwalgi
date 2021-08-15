@@ -32,7 +32,7 @@ const Reviews = () => {
             context={context}
             toggleContext={toggleContext}
           />
-          <Prompt context={context} review={review} />
+          <Prompt context={context} item={review} />
           <Response
             grade={grade}
             value={value}

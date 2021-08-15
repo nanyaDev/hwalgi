@@ -74,8 +74,8 @@ const TitleBar = ({ title, index, totalCount, context, toggleContext }) => (
 );
 
 // todo: 'overpassing' review prop
-const Prompt = ({ review, context }) => {
-  const { sentence, start, end, term } = review;
+const Prompt = ({ item, context }) => {
+  const { sentence, start, end, term } = item;
 
   return (
     <>
@@ -110,7 +110,7 @@ const Term = ({ term }) => (
     fontWeight="medium"
     color="gray.600"
     textAlign="center"
-    mb={6}
+    mb={3}
   >
     {term}
   </Text>
