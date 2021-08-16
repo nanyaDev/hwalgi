@@ -18,8 +18,8 @@ const Shell = ({ children }) => (
 // the margin: auto trick might work
 const Card = ({ children }) => (
   <Flex
-    h="450px"
     w="700px"
+    h="450px"
     direction="column"
     bg="white"
     borderRadius="xl"

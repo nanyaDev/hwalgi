@@ -1,9 +1,14 @@
 import NextLink from 'next/link';
+import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 // prettier-ignore
-import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton } from '@chakra-ui/react';
+import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton, Input, SkeletonCircle } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import Typed from 'typed.js';
 
 import Footer from '@/components/Footer';
+import Thumbnail from '@/components/Thumbnail';
+import { mockWords } from '@/utils/mockData';
 
 const Landing = () => (
   <>
@@ -138,7 +143,9 @@ const Lessons = () => (
           </Text>
         </Box>
       </Flex>
-      <Box w="50%" h="full" bg="gray.200" p={8}></Box>
+      <Center w="50%" h="full">
+        <LessonMockup />
+      </Center>
     </HStack>
   </Box>
 );
@@ -149,7 +156,9 @@ const Reviews = () => (
       Reviews
     </NumberMarker>
     <HStack h="60vh">
-      <Box w="50%" h="full" bg="gray.200" p={8}></Box>
+      <Center w="50%" h="full">
+        <ReviewMockup />
+      </Center>
       <Flex direction="column" w="50%" h="full" justify="space-evenly" px={8}>
         <Box>
           <Heading size="md" color="gray.700">
@@ -175,7 +184,7 @@ const Reviews = () => (
 );
 
 const CTA = () => (
-  <VStack py={32} spacing={4} bg="gray.50">
+  <VStack h="80vh" justify="center" spacing={4}>
     <Text fontSize="2xl" fontWeight="medium" color="gray.700">
       We&#39;re building a community of Korean learners
     </Text>
@@ -220,19 +229,140 @@ const NumberMarker = ({ children, num, startColor, endColor, ...rest }) => {
   );
 };
 
-const CatalogMockup = () => (
-  <Box w="50%" h="full" pos="relative">
-    <MockupShell pos="absolute" left={0} top={4}>
-      <Skeleton h="15px" speed={2} startColor="gray.300" mb={4} />
-      <SimpleGrid flexGrow={1} columns={6} rows={2} spacing={4}>
-        {[...Array(12)].map((_, i) => (
-          <Skeleton key={i} h="full" speed={2} startColor="gray.300" />
-        ))}
-      </SimpleGrid>
-    </MockupShell>
-    <MockupShell pos="absolute" right={1} bottom={8}></MockupShell>
-  </Box>
+const CatalogMockup = () => {
+  const item = {
+    koreanTitle: '사랑의 불시착',
+    posterURL:
+      'https://image.tmdb.org/t/p/w500/bXo9sDqMmo4dEOPSPLR7sdYPTvz.jpg',
+    slug: 'crash-landing-on-you',
+    title: 'Crash Landing on You',
+    tmdbID: '94796',
+  };
+
+  // todo: override default skeleton speed and startColor
+  return (
+    <Box w="50%" h="full" pos="relative">
+      <MockupShell pos="absolute" left={0} top={4}>
+        <Skeleton w="80%" mt="5%" h="15px" speed={2} startColor="gray.300" />
+        <SimpleGrid w="80%" my="5%" flexGrow={1} columns={6} rows={2}>
+          {[...Array(12)].map((_, i) => (
+            <Skeleton
+              key={i}
+              w="50px"
+              h="75px"
+              speed={2}
+              startColor="gray.300"
+            />
+          ))}
+        </SimpleGrid>
+      </MockupShell>
+      <MockupShell pos="absolute" right={1} bottom={8}>
+        <HStack spacing={8}>
+          <Thumbnail item={item} w="128px" h="192px" />
+          <Flex grow={1} h="192px" direction="column" justify="space-evenly">
+            <Box>
+              <Heading size="sm" color="gray.700" mb={2}>
+                {item.title}
+              </Heading>
+              <Heading size="xs" color="gray.500">
+                {item.koreanTitle}
+              </Heading>
+            </Box>
+            <HStack spacing={2}>
+              <SkeletonCircle size="4" speed={2} startColor="gray.300" />
+              <SkeletonCircle size="4" speed={2} startColor="gray.300" />
+              <Skeleton w="40px" h="15px" speed={2} startColor="gray.300" />
+            </HStack>
+            <Skeleton h="15px" speed={2} startColor="gray.300" />
+            <Skeleton h="15px" speed={2} startColor="gray.300" />
+            <Skeleton h="15px" speed={2} startColor="gray.300" />
+          </Flex>
+        </HStack>
+      </MockupShell>
+    </Box>
+  );
+};
+
+const LessonMockup = () => (
+  // pass
+  <MockupShell>
+    <SimpleGrid columns={3} spacing={4}>
+      {mockWords.slice(0, 9).map(({ term, definition }) => (
+        <Flex
+          key={term}
+          direction="column"
+          justify="center"
+          align="center"
+          w="115px"
+          h="65px"
+          bg="white"
+          border="1px"
+          borderColor="gray.300"
+          borderRadius="6px"
+        >
+          <Text fontSize="md" fontWeight="medium" color="gray.700" mb={2}>
+            {term}
+          </Text>
+          <Skeleton w="75px" h="10px" speed={2} startColor="gray.300" />
+        </Flex>
+      ))}
+    </SimpleGrid>
+  </MockupShell>
 );
+
+const ReviewMockup = () => (
+  <FlashcardShell>
+    <Text fontSize="3xl" fontWeight="normal" color="gray.600" mb={2}>
+      네,{' '}
+      <Text as="span" color="blue.500">
+        성격
+      </Text>{' '}
+      자체가 너무 온화하셔서
+    </Text>
+    <Typewriter />
+  </FlashcardShell>
+);
+
+const Typewriter = () => {
+  const el = useRef(null);
+  const typed = useRef(null);
+
+  useEffect(() => {
+    const options = {
+      strings: ['exciting^1000', 'personality^2000'],
+      typeSpeed: 50,
+      backSpeed: 50,
+      loop: true,
+      onTypingPaused: (arrayPos, self) => {
+        if (arrayPos === 0) self.el.style.color = '#E53E3E';
+        if (arrayPos === 1) self.el.style.color = '#38A169';
+      },
+      preStringTyped: (arrayPos, self) => {
+        self.el.style.color = 'black';
+      },
+    };
+
+    typed.current = new Typed(el.current, options);
+
+    return () => typed.current.destroy();
+  }, []);
+
+  return (
+    <div className="wrap">
+      <div className="type-wrap">
+        <Box
+          w="240px"
+          p={2}
+          borderBottom="1px"
+          borderColor="gray.200"
+          textAlign="center"
+        >
+          <span style={{ whiteSpace: 'pre' }} ref={el} />
+        </Box>
+      </div>
+    </div>
+  );
+};
 
 // ? ...props bad practice
 const MockupShell = ({ children, ...props }) => (
@@ -252,9 +382,49 @@ const MockupShell = ({ children, ...props }) => (
         <Box as="span" boxSize="12px" borderRadius="100%" bgColor="#27c93f" />
       </HStack>
     </Flex>
-    <Flex grow={1} direction="column" px="10%" py="8%">
+    <Flex grow={1} direction="column" justify="center" align="center">
       {children}
     </Flex>
+  </Flex>
+);
+
+const FlashcardShell = ({ children }) => (
+  <Flex
+    direction="column"
+    justify="center"
+    align="center"
+    w="467px"
+    h="300px"
+    bgColor="white"
+    borderRadius="md"
+    boxShadow="0 30px 60px 0 rgba(0, 0, 0, 0.12)"
+  >
+    <Text fontSize="sm" fontWeight="semibold" color="gray.400" mt={4} mb="auto">
+      Parasite
+    </Text>
+    {children}
+    <HStack spacing={24} mb={8} mt="auto">
+      <Button
+        w="75px"
+        h="30px"
+        variant="ghost"
+        border="1px"
+        colorScheme="purple"
+        fontSize="xs"
+      >
+        Retry
+      </Button>
+      <Button
+        w="75px"
+        h="30px"
+        variant="ghost"
+        border="1px"
+        colorScheme="blue"
+        fontSize="xs"
+      >
+        Submit
+      </Button>
+    </HStack>
   </Flex>
 );
 

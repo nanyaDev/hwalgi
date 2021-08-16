@@ -6,8 +6,10 @@ import { Box, Skeleton } from '@chakra-ui/react';
 // ? is there a better way to do w={w} h={h}
 // ? is the skeleton needed, seems hacky
 const Thumbnail = ({ item, w, h }) => {
+  const { slug, posterURL, tmdbID, title } = item;
+
   return (
-    <NextLink href={`/catalog/${item.slug}`} passHref>
+    <NextLink href={`/catalog/${slug}`} passHref>
       <Box
         d="block"
         w={w}
@@ -23,9 +25,9 @@ const Thumbnail = ({ item, w, h }) => {
       >
         <Skeleton h="full" w="full" />
         <Image
-          src={item.posterURL}
-          key={item.tmdbID}
-          alt={item.title}
+          src={posterURL}
+          key={tmdbID}
+          alt={title}
           layout="fill"
           objectFit="cover"
         />
