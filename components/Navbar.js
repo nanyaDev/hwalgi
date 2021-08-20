@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 // prettier-ignore
 import { Avatar, Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Stack, } from '@chakra-ui/react';
 
@@ -42,12 +43,24 @@ const Navbar = () => {
   );
 };
 
-const ButtonLink = ({ href, children }) => (
-  <NextLink href={href} passHref>
-    <Button as="a" variant="ghost" color="gray.700">
-      {children}
-    </Button>
-  </NextLink>
-);
+// todo: asPath can contain query string, might mess this up
+// ? the boxShadow approach to reduce border length might be bad on older browsers
+// cf. https://stackoverflow.com/questions/8572952/border-length-smaller-than-div-width
+const ButtonLink = ({ href, children }) => {
+  const router = useRouter();
+
+  return (
+    <NextLink href={href} passHref>
+      <Button
+        as="a"
+        variant="ghost"
+        color="gray.700"
+        boxShadow={router.asPath === href ? '0 15px 0 -13px #3182CE' : null}
+      >
+        {children}
+      </Button>
+    </NextLink>
+  );
+};
 
 export default Navbar;
