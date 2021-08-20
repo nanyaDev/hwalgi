@@ -8,7 +8,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme}>
       <AuthProvider>
-        <GradientBar />
         <Component {...pageProps} />
       </AuthProvider>
     </ChakraProvider>

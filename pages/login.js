@@ -7,6 +7,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, I
 
 import { useAuth } from '@/lib/auth';
 import schema from '@/utils/schema';
+import GradientBar from '@/components/GradientBar';
 import AuthCheck from '@/components/AuthCheck';
 
 const Login = () => {
@@ -36,6 +37,7 @@ const Login = () => {
 
   return (
     <AuthCheck isRequired={false}>
+      <GradientBar />
       <Flex grow={1} justify="center">
         <Flex direction="column" w="50%" justify="center" align="center">
           <Image src="/login.svg" width={500} height={500} alt="" />

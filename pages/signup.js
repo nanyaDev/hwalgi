@@ -8,6 +8,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, I
 import { useAuth } from '@/lib/auth';
 import schema from '@/utils/schema';
 import AuthCheck from '@/components/AuthCheck';
+import GradientBar from '@/components/GradientBar';
 
 const Signup = () => {
   const auth = useAuth();
@@ -42,6 +43,7 @@ const Signup = () => {
   // ? diff b/w colorScheme and color
   return (
     <AuthCheck isRequired={false}>
+      <GradientBar />
       <Flex grow={1} justify="center">
         <Flex direction="column" w="50%" justify="center" align="center">
           <Image src="/signup.svg" width={500} height={500} alt="" />

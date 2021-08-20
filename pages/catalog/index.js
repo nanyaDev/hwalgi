@@ -3,6 +3,7 @@ import { Box, SimpleGrid } from '@chakra-ui/react';
 
 import { firestore as db } from '@/utils/firebase';
 import AuthCheck from '@/components/AuthCheck';
+import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import CatalogFilter from '@/components/CatalogFilter';
@@ -64,6 +65,7 @@ const Catalog = ({ catalog }) => {
 
   return (
     <AuthCheck>
+      <GradientBar />
       <Navbar />
       <Box flexGrow={1} bg="gray.50">
         <CatalogFilter

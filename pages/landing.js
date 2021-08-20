@@ -1,17 +1,18 @@
 import NextLink from 'next/link';
-import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 // prettier-ignore
 import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton, Input, SkeletonCircle } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Typed from 'typed.js';
 
+import GradientBar from '@/components/GradientBar';
 import Footer from '@/components/Footer';
 import Thumbnail from '@/components/Thumbnail';
 import { mockWords } from '@/utils/mockData';
 
 const Landing = () => (
   <>
+    <GradientBar />
     <AuthBar />
     <Hero />
     <Catalog />

@@ -1,6 +1,7 @@
 import { Button, Flex, Kbd, Text } from '@chakra-ui/react';
 
 import AuthCheck from '@/components/AuthCheck';
+import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
 import useToggle from '@/lib/useToggle';
 import useKey from '@/lib/useKey';
@@ -25,6 +26,7 @@ const Lessons = () => {
   // todo: Prompt component name doesn't make much sense in lesson context
   return (
     <AuthCheck>
+      <GradientBar />
       <Navbar />
       <Shell>
         <Card>

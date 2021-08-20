@@ -1,4 +1,5 @@
 import AuthCheck from '@/components/AuthCheck';
+import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
 import useKey from '@/lib/useKey';
 import useToggle from '@/lib/useToggle';
@@ -22,6 +23,7 @@ const Reviews = () => {
 
   return (
     <AuthCheck>
+      <GradientBar />
       <Navbar />
       <Shell>
         <Card>

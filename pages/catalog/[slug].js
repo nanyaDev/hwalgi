@@ -6,6 +6,7 @@ import { Box, Center, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Text,
 import { FaHeart, FaBookmark } from 'react-icons/fa';
 
 import AuthCheck from '@/components/AuthCheck';
+import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
@@ -108,6 +109,7 @@ const CatalogItem = ({ item, credits, trailer }) => {
   // ? is it okay to use onMouseDown instead of onClick
   return (
     <AuthCheck>
+      <GradientBar />
       <Navbar />
       <Flex direction="column" grow={1} bg="gray.50">
         <HStack align="flex-start" spacing={8} px={36} pt={8}>
