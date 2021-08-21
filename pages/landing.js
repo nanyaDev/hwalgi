@@ -227,8 +227,14 @@ const CTA = ({ posters }) => (
       transformOrigin="center"
     >
       {posters.map((posterURL, i) => (
-        <Box key={`poster-${i}`} w="full" pos="relative">
-          <Image src={posterURL} layout="fill" objectFit="cover" alt="poster" />
+        <Box key={`poster-${i}`} w="full" pos="relative" userSelect="none">
+          <Image
+            src={posterURL}
+            layout="fill"
+            objectFit="cover"
+            alt="poster"
+            draggable="false"
+          />
         </Box>
       ))}
     </Flex>
