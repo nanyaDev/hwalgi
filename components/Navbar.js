@@ -46,6 +46,7 @@ const Navbar = () => {
 
 // todo: asPath can contain query string, might mess this up
 // ? the boxShadow approach to reduce border length might be bad on older browsers
+// ? is path.includes(href) robust and/or efficient
 // cf. https://stackoverflow.com/questions/8572952/border-length-smaller-than-div-width
 const ButtonLink = ({ href, children }) => {
   const router = useRouter();
@@ -56,7 +57,15 @@ const ButtonLink = ({ href, children }) => {
         as="a"
         variant="ghost"
         color="gray.700"
-        boxShadow={router.asPath === href ? '0 15px 0 -13px #3182CE' : null}
+        boxShadow={
+          router.asPath.includes(href) ? '0 15px 0 -13px #3182CE' : null
+        }
+        _active={{
+          bg: 'none',
+        }}
+        _hover={{
+          boxShadow: '0 15px 0 -13px #3182CE',
+        }}
       >
         {children}
       </Button>
