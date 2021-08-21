@@ -2,16 +2,41 @@ import NextLink from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 // prettier-ignore
-import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton, Input, SkeletonCircle } from '@chakra-ui/react';
+import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton, Input, SkeletonCircle, GridItem } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import Typed from 'typed.js';
 
+import { firestore as db } from '@/utils/firebase';
 import GradientBar from '@/components/GradientBar';
 import Footer from '@/components/Footer';
 import Thumbnail from '@/components/Thumbnail';
 import { mockWords } from '@/utils/mockData';
 
-const Landing = () => (
+// ? mostly copied from /catalog, is there a way to DRY up code
+export const getStaticProps = async () => {
+  const catalogRef = db.collection('catalog');
+  const catalog = (await catalogRef.limit(5).get()).docs.map((doc) =>
+    doc.data()
+  );
+
+  const posters = [];
+
+  await Promise.all(
+    catalog.map(async (item) => {
+      const request = `https://api.themoviedb.org/3/${item.type}/${item.tmdbID}?api_key=${process.env.TMDB_API_KEY}&language=en`;
+      const response = await fetch(request);
+      const data = await response.json();
+
+      posters.push(`https://image.tmdb.org/t/p/w500${data.poster_path}`);
+    })
+  );
+
+  return {
+    props: { posters },
+  };
+};
+
+const Landing = ({ posters }) => (
   <>
     <GradientBar />
     <AuthBar />
@@ -19,7 +44,7 @@ const Landing = () => (
     <Catalog />
     <Lessons />
     <Reviews />
-    <CTA />
+    <CTA posters={posters} />
     <Footer />
   </>
 );
@@ -188,15 +213,50 @@ const Reviews = () => (
   </Box>
 );
 
-const CTA = () => (
-  <VStack h="80vh" justify="center" spacing={4}>
-    <Text fontSize="2xl" fontWeight="medium" color="gray.700">
-      We&#39;re building a community of Korean learners
-    </Text>
-    <Button size="lg" variant="solid" colorScheme="blue">
-      Sign Up
-    </Button>
-  </VStack>
+// ? rotation stuff seems janky
+// ? why is w="full" needed
+// ? not 100% sure why pos="absolute" works for centering and overlap
+const CTA = ({ posters }) => (
+  <Center h="100vh" overflow="hidden">
+    <Flex
+      shrink={0}
+      opacity="0.2"
+      w="120vw"
+      h="36vw"
+      transform="rotate(-7deg)"
+      transformOrigin="center"
+    >
+      {posters.map((posterURL, i) => (
+        <Box key={`poster-${i}`} w="full" pos="relative">
+          <Image src={posterURL} layout="fill" objectFit="cover" alt="poster" />
+        </Box>
+      ))}
+    </Flex>
+    <VStack spacing={12} pos="absolute">
+      <Heading align="center" color="blue.800">
+        Ready to immerse in Korean?
+      </Heading>
+      <Button
+        w="200px"
+        h="75px"
+        fontWeight="semibold"
+        fontSize={24}
+        letterSpacing="widest"
+        bgGradient="linear(to-r, blue.600, purple.600)"
+        _hover={{
+          bgGradient: 'linear(to-r, blue.700, purple.700)',
+        }}
+        _active={{
+          bgGradient: 'linear(to-r, blue.700, purple.700)',
+          transform: 'scale(0.97)',
+        }}
+        color="white"
+        borderRadius="lg"
+      >
+        SIGN UP
+      </Button>
+    </VStack>
+  </Center>
 );
 
 // ? is ...rest a bad practice

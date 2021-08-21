@@ -5,7 +5,7 @@ import { LogoBlack } from '@/styles/icons';
 
 // ? is pos="absolute" the right way lay this out
 const Footer = () => (
-  <Center py={24} bg="gray.200">
+  <Center py={24}>
     <VStack spacing={4} pos="absolute" left={24}>
       <Icon as={LogoBlack} w="120px" h="30px" />
       <Text fontWeight="light">&copy; Hwalgi {new Date().getFullYear()}</Text>
