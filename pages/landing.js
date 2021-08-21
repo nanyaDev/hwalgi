@@ -242,25 +242,28 @@ const CTA = ({ posters }) => (
       <Heading align="center" color="blue.800">
         Ready to immerse in Korean?
       </Heading>
-      <Button
-        w="200px"
-        h="75px"
-        fontWeight="semibold"
-        fontSize={24}
-        letterSpacing="widest"
-        bgGradient="linear(to-r, blue.600, purple.600)"
-        _hover={{
-          bgGradient: 'linear(to-r, blue.700, purple.700)',
-        }}
-        _active={{
-          bgGradient: 'linear(to-r, blue.700, purple.700)',
-          transform: 'scale(0.97)',
-        }}
-        color="white"
-        borderRadius="lg"
-      >
-        SIGN UP
-      </Button>
+      <NextLink href="/signup" passHref>
+        <Button
+          as="a"
+          w="200px"
+          h="75px"
+          fontWeight="semibold"
+          fontSize={24}
+          letterSpacing="widest"
+          bgGradient="linear(to-r, blue.600, purple.600)"
+          _hover={{
+            bgGradient: 'linear(to-r, blue.700, purple.700)',
+          }}
+          _active={{
+            bgGradient: 'linear(to-r, blue.700, purple.700)',
+            transform: 'scale(0.97)',
+          }}
+          color="white"
+          borderRadius="lg"
+        >
+          SIGN UP
+        </Button>
+      </NextLink>
     </VStack>
   </Center>
 );
