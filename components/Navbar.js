@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/auth';
 
 // todo - investigate lazy mounting the menu button (cf. chakra docs)
 // todo - fix logo width and height not setting correctly
+// ? why does the image have to be in a <Box as="a">
 const Navbar = () => {
   const auth = useAuth();
 

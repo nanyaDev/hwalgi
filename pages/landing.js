@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 // prettier-ignore
 import { Flex, Button, Stack, Heading, Box, Text, Center, VStack, Link, HStack, SimpleGrid, Skeleton, Input, SkeletonCircle } from '@chakra-ui/react';
@@ -24,16 +25,19 @@ const Landing = () => (
 );
 
 const AuthBar = () => (
-  <Stack spacing={4} isInline justify="flex-end" p={4}>
-    <NextLink href="/login" passHref>
-      <Button as="a" variant="ghost">
-        Log In
-      </Button>
-    </NextLink>
-    <NextLink href="/signup" passHref>
-      <Button as="a">Sign Up</Button>
-    </NextLink>
-  </Stack>
+  <Flex justify="space-between" align="center" px={8} py={4}>
+    <Image src="/logo.png" width={40} height={40} alt="logo" />
+    <Stack spacing={4} isInline justify="flex-end">
+      <NextLink href="/login" passHref>
+        <Button as="a" variant="ghost">
+          Log In
+        </Button>
+      </NextLink>
+      <NextLink href="/signup" passHref>
+        <Button as="a">Sign Up</Button>
+      </NextLink>
+    </Stack>
+  </Flex>
 );
 
 const Hero = () => (
