@@ -20,7 +20,7 @@ const Navbar = () => {
       borderBottom="1px"
       borderColor="gray.200"
     >
-      <NextLink href="/" passHref>
+      <NextLink href="/catalog" passHref>
         <Box as="a" pos="relative">
           <Image src="/logo.png" width={40} height={40} alt="logo" />
         </Box>
