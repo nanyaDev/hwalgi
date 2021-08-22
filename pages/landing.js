@@ -110,6 +110,7 @@ const Catalog = () => (
       startColor="blue.500"
       endColor="cyan.400"
       id="catalog-section"
+      sx={{ scrollMargin: '-80px' }}
     >
       Catalog
     </NumberMarker>
@@ -218,14 +219,7 @@ const Reviews = () => (
 // ? not 100% sure why pos="absolute" works for centering and overlap
 const CTA = ({ posters }) => (
   <Center h="100vh" overflow="hidden">
-    <Flex
-      shrink={0}
-      opacity="0.2"
-      w="120vw"
-      h="36vw"
-      transform="rotate(-7deg)"
-      transformOrigin="center"
-    >
+    <Flex shrink={0} opacity="0.15" w="120vw" h="36vw">
       {posters.map((posterURL, i) => (
         <Box key={`poster-${i}`} w="full" pos="relative" userSelect="none">
           <Image
@@ -239,9 +233,15 @@ const CTA = ({ posters }) => (
       ))}
     </Flex>
     <VStack spacing={12} pos="absolute">
-      <Heading align="center" color="blue.800">
-        Ready to immerse in Korean?
-      </Heading>
+      <Box>
+        <Heading align="center" color="blue.800" mb={4}>
+          Ready to immerse in Korean?
+        </Heading>
+        <Text fontSize="18px" align="center" color="blue.700">
+          Create an account in seconds and learn <br />
+          vocabulary from your favorite Korean shows.
+        </Text>
+      </Box>
       <NextLink href="/signup" passHref>
         <Button
           as="a"
@@ -269,39 +269,36 @@ const CTA = ({ posters }) => (
 );
 
 // ? is ...rest a bad practice
-const NumberMarker = ({ children, num, startColor, endColor, ...rest }) => {
-  // pass
-  return (
-    <VStack spacing={0} {...rest}>
-      <Box
-        h="100px"
-        w="1px"
-        bgGradient={`linear(to-b, transparent, ${endColor})`}
-      />
-      <Flex
-        justify="center"
-        align="center"
-        h={10}
-        w={10}
-        borderRadius="100%"
-        bgGradient={`linear(to-r, ${startColor}, ${endColor})`}
-        color="white"
-        fontWeight="bold"
-      >
-        {num}
-      </Flex>
-      <Box
-        as="span"
-        bgGradient={`linear(to-r, ${startColor}, ${endColor})`}
-        bgClip="text"
-        fontSize={32}
-        fontWeight="bold"
-      >
-        {children}
-      </Box>
-    </VStack>
-  );
-};
+const NumberMarker = ({ children, num, startColor, endColor, ...rest }) => (
+  <VStack spacing={0} {...rest}>
+    <Box
+      h="100px"
+      w="1px"
+      bgGradient={`linear(to-b, transparent, ${endColor})`}
+    />
+    <Flex
+      justify="center"
+      align="center"
+      h={10}
+      w={10}
+      borderRadius="100%"
+      bgGradient={`linear(to-r, ${startColor}, ${endColor})`}
+      color="white"
+      fontWeight="bold"
+    >
+      {num}
+    </Flex>
+    <Box
+      as="span"
+      bgGradient={`linear(to-r, ${startColor}, ${endColor})`}
+      bgClip="text"
+      fontSize={32}
+      fontWeight="bold"
+    >
+      {children}
+    </Box>
+  </VStack>
+);
 
 const CatalogMockup = () => {
   const item = {
