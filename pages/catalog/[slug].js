@@ -13,7 +13,6 @@ import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
 import ItemFilter from '@/components/ItemFilter';
 import ActionBar from '@/components/ActionBar';
-import { cardData } from '@/utils/mockData';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -30,8 +29,11 @@ export const getStaticProps = async ({ params }) => {
   const { slug } = params;
 
   const catalogRef = db.collection('catalog');
-  const snapshot = await catalogRef.where('slug', '==', slug).limit(1).get();
-  let item = snapshot.docs[0].data();
+  const catalogSnapshot = await catalogRef
+    .where('slug', '==', slug)
+    .limit(1)
+    .get();
+  let item = catalogSnapshot.docs[0].data();
 
   // todo: repeated from index.js => abstract helper function
   const infoRequest = `https://api.themoviedb.org/3/${item.type}/${item.tmdbID}?api_key=${process.env.TMDB_API_KEY}&language=en`;
@@ -75,14 +77,21 @@ export const getStaticProps = async ({ params }) => {
   // todo: make sure everything has a trailer
   const trailer = video?.key || null;
 
+  const cardsRef = db.collection('catalog').doc(slug).collection('cards');
+  const cardsSnapshot = await cardsRef.limit(105).get(); // ! limit for testing
+  const cards = cardsSnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+
   return {
-    props: { item, credits, trailer },
+    props: { item, credits, trailer, cards },
   };
 };
 
 // ? why does credits.director work even though it's an array
-const CatalogItem = ({ item, credits, trailer }) => {
-  const [words, setWords] = useState(cardData);
+const CatalogItem = ({ item, credits, trailer, cards }) => {
+  const [words, setWords] = useState(cards);
   const [filters, setFilters] = useState({
     sort: 'chronology',
     filter: 'known',
