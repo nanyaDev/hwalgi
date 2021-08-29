@@ -12,7 +12,7 @@ import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
 import ItemFilter from '@/components/ItemFilter';
-import { mockWords } from '@/utils/mockData';
+import { cardData } from '@/utils/mockData';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -85,23 +85,24 @@ const CatalogItem = ({ item, credits, trailer }) => {
     sort: 'chronology',
     filter: 'known',
   });
-  const [words, setWords] = useState(mockWords);
+  const [words, setWords] = useState(cardData);
 
   const updateFilter = (filter, value) => {
     setFilters({ ...filters, [filter]: value });
   };
 
   // todo: this all seems very inefficient, with the grid rerendered every time
-  const selectWord = (term) => {
+  const selectWord = (word) => {
     const copy = words.map((obj) => ({ ...obj })); // deep copy hack
 
     // this seems suboptimal
-    const update = copy.map((word) => {
-      if (word.term === term) {
-        word.selected = word.selected === undefined ? true : !word.selected;
+    const update = copy.map((wordObj) => {
+      if (wordObj.word === word) {
+        wordObj.selected =
+          wordObj.selected === undefined ? true : !wordObj.selected;
       }
 
-      return word;
+      return wordObj;
     });
 
     setWords(update);
@@ -191,9 +192,9 @@ const CatalogItem = ({ item, credits, trailer }) => {
             </Flex>
             <ItemFilter updateFilter={updateFilter} />
             <SimpleGrid my={12} columns={6} spacing={10}>
-              {words.map(({ term, definition, selected }) => (
+              {words.map(({ word, definitions, selected }) => (
                 <Flex
-                  key={term}
+                  key={word}
                   direction="column"
                   justify="center"
                   align="center"
@@ -203,7 +204,7 @@ const CatalogItem = ({ item, credits, trailer }) => {
                   border={selected ? '2px' : '1px'}
                   borderColor={selected ? 'blue.500' : 'gray.300'}
                   borderRadius="6px"
-                  onMouseDown={() => selectWord(term)}
+                  onMouseDown={() => selectWord(word)}
                 >
                   <Text
                     fontSize="lg"
@@ -211,9 +212,11 @@ const CatalogItem = ({ item, credits, trailer }) => {
                     color="gray.700"
                     mb={1}
                   >
-                    {term}
+                    {word}
                   </Text>
-                  <Text fontWeight="light">{definition}</Text>
+                  <Text fontWeight="light" align="center">
+                    {definitions[0]}
+                  </Text>
                 </Flex>
               ))}
             </SimpleGrid>
