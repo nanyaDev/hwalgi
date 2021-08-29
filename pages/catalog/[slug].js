@@ -81,17 +81,23 @@ export const getStaticProps = async ({ params }) => {
 
 // ? why does credits.director work even though it's an array
 const CatalogItem = ({ item, credits, trailer }) => {
+  const [words, setWords] = useState(cardData);
   const [filters, setFilters] = useState({
     sort: 'chronology',
     filter: 'known',
   });
-  const [words, setWords] = useState(cardData);
+  const [cursor, setCursor] = useState(0);
 
   const updateFilter = (filter, value) => {
     setFilters({ ...filters, [filter]: value });
   };
 
+  const updateCursor = (change) => {
+    setCursor((p) => p + change);
+  };
+
   // todo: this all seems very inefficient, with the grid rerendered every time
+  // todo: switch to dict for words so that it's not iterating over entire array each time
   const selectWord = (word) => {
     const copy = words.map((obj) => ({ ...obj })); // deep copy hack
 
@@ -190,35 +196,42 @@ const CatalogItem = ({ item, credits, trailer }) => {
               </Text>
               <Box flexGrow={1} borderBottom="1px" borderColor="gray.600" />
             </Flex>
-            <ItemFilter updateFilter={updateFilter} />
+            <ItemFilter
+              cursor={cursor}
+              wordCount={words.length}
+              updateCursor={updateCursor}
+              updateFilter={updateFilter}
+            />
             <SimpleGrid my={12} columns={6} spacing={10}>
-              {words.map(({ word, definitions, selected }) => (
-                <Flex
-                  key={word}
-                  direction="column"
-                  justify="center"
-                  align="center"
-                  w="180px"
-                  h="100px"
-                  bg="white"
-                  border={selected ? '2px' : '1px'}
-                  borderColor={selected ? 'blue.500' : 'gray.300'}
-                  borderRadius="6px"
-                  onMouseDown={() => selectWord(word)}
-                >
-                  <Text
-                    fontSize="lg"
-                    fontWeight="semibold"
-                    color="gray.700"
-                    mb={1}
+              {words
+                .slice(cursor, cursor + 30)
+                .map(({ word, definitions, selected }) => (
+                  <Flex
+                    key={word}
+                    direction="column"
+                    justify="center"
+                    align="center"
+                    w="180px"
+                    h="100px"
+                    bg="white"
+                    border={selected ? '2px' : '1px'}
+                    borderColor={selected ? 'blue.500' : 'gray.300'}
+                    borderRadius="6px"
+                    onMouseDown={() => selectWord(word)}
                   >
-                    {word}
-                  </Text>
-                  <Text fontWeight="light" align="center">
-                    {definitions[0]}
-                  </Text>
-                </Flex>
-              ))}
+                    <Text
+                      fontSize="lg"
+                      fontWeight="semibold"
+                      color="gray.700"
+                      mb={1}
+                    >
+                      {word}
+                    </Text>
+                    <Text fontWeight="light" align="center">
+                      {definitions[0]}
+                    </Text>
+                  </Flex>
+                ))}
             </SimpleGrid>
           </Box>
         </Flex>

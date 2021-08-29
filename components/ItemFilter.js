@@ -3,7 +3,9 @@ import { Flex, HStack, IconButton, Select, Text } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 // todo: find a way to reconcile CatalogFilter and ItemFilter
-const ItemFilter = ({ updateFilter }) => {
+// todo: disable pagination buttons at extremes
+// todo: fix pagination number at right extreme
+const ItemFilter = ({ cursor, wordCount, updateCursor, updateFilter }) => {
   const filters = [
     {
       name: 'Sort By',
@@ -42,16 +44,20 @@ const ItemFilter = ({ updateFilter }) => {
         ))}
       </HStack>
       <Flex align="center">
-        <Text mr={4}>51 - 100 of 783</Text>
+        <Text mr={4}>
+          {cursor + 1} - {cursor + 30} of {wordCount}
+        </Text>
         <IconButton
           variant="ghost"
           aria-label="Previous Page"
           icon={<ChevronLeftIcon boxSize="1.5em" />}
+          onClick={() => updateCursor(-30)}
         />
         <IconButton
           variant="ghost"
           aria-label="Next Page"
           icon={<ChevronRightIcon boxSize="1.5em" />}
+          onClick={() => updateCursor(30)}
         />
       </Flex>
     </Flex>
