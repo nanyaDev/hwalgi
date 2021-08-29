@@ -2,7 +2,7 @@ import { useState } from 'react';
 // todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
 // prettier-ignore
-import { Box, Center, Flex, Heading, HStack, Icon, IconButton, SimpleGrid, Text, VStack } from '@chakra-ui/react';
+import { Box, Flex, Heading, HStack, IconButton, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
 import { NextSeo } from 'next-seo';
 
@@ -12,6 +12,7 @@ import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
 import ItemFilter from '@/components/ItemFilter';
+import ActionBar from '@/components/ActionBar';
 import { cardData } from '@/utils/mockData';
 
 export const getStaticPaths = async () => {
@@ -87,6 +88,7 @@ const CatalogItem = ({ item, credits, trailer }) => {
     filter: 'known',
   });
   const [cursor, setCursor] = useState(0);
+  const [checkbox, setCheckbox] = useState(false);
 
   const updateFilter = (filter, value) => {
     setFilters({ ...filters, [filter]: value });
@@ -94,6 +96,25 @@ const CatalogItem = ({ item, credits, trailer }) => {
 
   const updateCursor = (change) => {
     setCursor((p) => p + change);
+    setCheckbox(false);
+  };
+
+  // todo: make checkbox functionality more logical
+  const handleCheckbox = () => {
+    // todo: DRY up this code taken from selectWord
+    const copy = words.map((obj) => ({ ...obj })); // deep copy hack
+    const pageWords = words.slice(cursor, cursor + 30).map((wObj) => wObj.word);
+
+    const update = copy.map((wordObj) => {
+      if (pageWords.includes(wordObj.word)) {
+        wordObj.selected = !checkbox;
+      }
+
+      return wordObj;
+    });
+
+    setWords(update);
+    setCheckbox((p) => !p);
   };
 
   // todo: this all seems very inefficient, with the grid rerendered every time
@@ -113,6 +134,8 @@ const CatalogItem = ({ item, credits, trailer }) => {
 
     setWords(update);
   };
+
+  const numSelected = words.filter((w) => w.selected === true).length;
 
   // ? is it okay to use onMouseDown instead of onClick
   return (
@@ -202,7 +225,7 @@ const CatalogItem = ({ item, credits, trailer }) => {
               updateCursor={updateCursor}
               updateFilter={updateFilter}
             />
-            <SimpleGrid my={12} columns={6} spacing={10}>
+            <SimpleGrid my={12} columns={6} spacing={4}>
               {words
                 .slice(cursor, cursor + 30)
                 .map(({ word, definitions, selected }) => (
@@ -234,6 +257,11 @@ const CatalogItem = ({ item, credits, trailer }) => {
                 ))}
             </SimpleGrid>
           </Box>
+          <ActionBar
+            numSelected={numSelected}
+            checkbox={checkbox}
+            handleCheckbox={handleCheckbox}
+          />
         </Flex>
       </AuthCheck>
     </>
