@@ -75,14 +75,14 @@ const TitleBar = ({ title, index, totalCount, context, toggleContext }) => (
 
 // todo: 'overpassing' review prop
 const Prompt = ({ item, context }) => {
-  const { sentence, start, end, term } = item;
+  const { sentence, start, length, word } = item;
 
   return (
     <>
       {context ? (
-        <Sentence sentence={sentence} start={start} end={end} />
+        <Sentence sentence={sentence} start={start} end={start + length} />
       ) : (
-        <Term term={term} />
+        <Word word={word} />
       )}
     </>
   );
@@ -104,7 +104,7 @@ const Sentence = ({ sentence, start, end }) => (
   </Text>
 );
 
-const Term = ({ term }) => (
+const Word = ({ word }) => (
   <Text
     fontSize="6xl"
     fontWeight="medium"
@@ -112,7 +112,7 @@ const Term = ({ term }) => (
     textAlign="center"
     mb={3}
   >
-    {term}
+    {word}
   </Text>
 );
 

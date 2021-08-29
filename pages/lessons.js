@@ -52,7 +52,7 @@ const Info = ({ lesson }) => (
       {lesson.definitions[0]}
     </Text>
     <Text fontSize="24px" color="gray.400">
-      {lesson.definitions.slice(1)}
+      {lesson.definitions.slice(1, 3).join(', ')}
     </Text>
   </>
 );
