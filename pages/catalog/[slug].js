@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // todo: import as just firestore
 import { firestore as db } from '@/utils/firebase';
 // prettier-ignore
@@ -13,6 +13,7 @@ import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
 import ItemFilter from '@/components/ItemFilter';
 import ActionBar from '@/components/ActionBar';
+import { useAuth } from '@/lib/auth';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -78,7 +79,7 @@ export const getStaticProps = async ({ params }) => {
   const trailer = video?.key || null;
 
   const cardsRef = db.collection('catalog').doc(slug).collection('cards');
-  const cardsSnapshot = await cardsRef.limit(105).get(); // ! limit for testing
+  const cardsSnapshot = await cardsRef.get();
   const cards = cardsSnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
@@ -91,10 +92,15 @@ export const getStaticProps = async ({ params }) => {
 
 // ? why does credits.director work even though it's an array
 const CatalogItem = ({ item, credits, trailer, cards }) => {
+  const { user } = useAuth();
+  // todo: probably better to use SWR
+  // cf. https://github.com/leerob/fastfeedback/blob/master/pages/sites.js
+  const [wordStats, setWordStats] = useState({});
+
   const [words, setWords] = useState(cards);
   const [filters, setFilters] = useState({
     sort: 'chronology',
-    filter: 'known',
+    filter: 'new',
   });
   const [cursor, setCursor] = useState(0);
   const [checkbox, setCheckbox] = useState(false);
@@ -112,7 +118,10 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
   const handleCheckbox = () => {
     // todo: DRY up this code taken from selectWord
     const copy = words.map((obj) => ({ ...obj })); // deep copy hack
-    const pageWords = words.slice(cursor, cursor + 30).map((wObj) => wObj.word);
+    // ? how does using wordsToDisplay here affect rerendering
+    const pageWords = wordsToDisplay
+      .slice(cursor, cursor + 30)
+      .map((wObj) => wObj.word);
 
     const update = copy.map((wordObj) => {
       if (pageWords.includes(wordObj.word)) {
@@ -144,7 +153,52 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
     setWords(update);
   };
 
+  const applyItemFilters = (words) => {
+    let arr = words;
+
+    if (filters.filter === 'known') {
+      arr = words.filter((wObj) => wordStats.known?.includes(wObj.word));
+    } else if (filters.filter === 'learning') {
+      arr = words.filter((wObj) => wordStats.learning?.includes(wObj.word));
+    } else if (filters.filter === 'new') {
+      arr = words.filter(
+        (wObj) =>
+          !wordStats.known?.includes(wObj.word) &&
+          !wordStats.learning?.includes(wObj.word)
+      );
+    }
+
+    if (filters.sort === 'chronology') {
+      arr = arr.sort(
+        (a, b) => a.minOrder - b.minOrder || a.minStart - b.minStart
+      );
+    } else if (filters.sort === 'frequency') {
+      arr = arr.sort((a, b) => a.frequency - b.frequency);
+    } else if (filters.sort === 'occurences') {
+      arr = arr.sort((a, b) => b.occurences - a.occurences);
+    }
+
+    return arr;
+  };
+
   const numSelected = words.filter((w) => w.selected === true).length;
+  const wordsToDisplay = applyItemFilters(words);
+
+  // todo: react suspense ?!
+  // cf. https://stackoverflow.com/questions/53332321/
+  useEffect(() => {
+    if (user) {
+      (async () => {
+        const response = await fetch('/api/cards', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', token: user.token },
+          credentials: 'same-origin',
+        });
+        const responseJSON = await response.json();
+        setWordStats(responseJSON);
+      })();
+    }
+  }, [user]);
 
   // ? is it okay to use onMouseDown instead of onClick
   return (
@@ -230,12 +284,12 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
             </Flex>
             <ItemFilter
               cursor={cursor}
-              wordCount={words.length}
+              wordCount={wordsToDisplay.length}
               updateCursor={updateCursor}
               updateFilter={updateFilter}
             />
             <SimpleGrid my={12} columns={6} spacing={4}>
-              {words
+              {wordsToDisplay
                 .slice(cursor, cursor + 30)
                 .map(({ word, definitions, selected }) => (
                   <Flex
