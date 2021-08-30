@@ -1,5 +1,6 @@
 import admin, { fireauth, firestore } from '@/utils/fireadmin';
 
+// todo: send error messages if req.method is of wrong type (for all api endpoints)
 const handler = async (req, res) => {
   // ? what if this fails, there will be entry in firebase auth but not in firestore
   if (req.method === 'POST') {
