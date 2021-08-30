@@ -78,12 +78,20 @@ export const getStaticProps = async ({ params }) => {
   // todo: make sure everything has a trailer
   const trailer = video?.key || null;
 
-  const cardsRef = db.collection('catalog').doc(slug).collection('cards');
-  const cardsSnapshot = await cardsRef.get();
-  const cards = cardsSnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  // ? is this good practice
+  // ? how to do a named dynamic import
+  let cards;
+  if (process.env.NODE_ENV === 'development') {
+    const mockData = await import('@/utils/mockData');
+    cards = mockData.cardData;
+  } else {
+    const cardsRef = db.collection('catalog').doc(slug).collection('cards');
+    const cardsSnapshot = await cardsRef.get();
+    cards = cardsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  }
 
   return {
     props: { item, credits, trailer, cards },
