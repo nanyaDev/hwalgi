@@ -161,6 +161,47 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
     setWords(update);
   };
 
+  const addToKnown = async () => {
+    const data = words.filter((w) => w.selected === true);
+
+    const response = await fetch('/api/cards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', token: user.token },
+      credentials: 'same-origin',
+      body: JSON.stringify({ destination: 'known', data }),
+    });
+
+    // todo: is there a better way to catch errors (axios?)
+    if (response.ok) {
+      setWordStats((p) => ({
+        ...p,
+        known: [...p.known, ...data.map((d) => d.word)],
+      }));
+      setWords(cards);
+    }
+  };
+
+  // todo: does this handle duplicate adding to lessons
+  const addToLessons = async () => {
+    const data = words.filter((w) => w.selected === true);
+
+    const response = await fetch('/api/cards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', token: user.token },
+      credentials: 'same-origin',
+      body: JSON.stringify({ destination: 'lessons', data }),
+    });
+
+    // todo: is there a better way to catch errors (axios?)
+    if (response.ok) {
+      setWordStats((p) => ({
+        ...p,
+        learning: [...p.learning, ...data.map((d) => d.word)],
+      }));
+      setWords(cards);
+    }
+  };
+
   const applyItemFilters = (words) => {
     let arr = words;
 
@@ -190,6 +231,7 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
   };
 
   const numSelected = words.filter((w) => w.selected === true).length;
+  // ? does this update when wordStats changes since wordStats is hidden in the function
   const wordsToDisplay = applyItemFilters(words);
 
   // todo: react suspense ?!
@@ -332,6 +374,8 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
             numSelected={numSelected}
             checkbox={checkbox}
             handleCheckbox={handleCheckbox}
+            addToKnown={addToKnown}
+            addToLessons={addToLessons}
           />
         </Flex>
       </AuthCheck>

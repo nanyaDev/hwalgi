@@ -10,7 +10,11 @@ const handler = async (req, res) => {
     if (destination === 'known') {
       const wordStatsRef = firestore.collection('wordStats').doc(uid);
       await wordStatsRef.set(
-        { known: admin.firestore.FieldValue.arrayUnion(...data) },
+        {
+          known: admin.firestore.FieldValue.arrayUnion(
+            ...data.map((card) => card.word)
+          ),
+        },
         { merge: true }
       );
     }
