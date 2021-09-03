@@ -45,18 +45,20 @@ const ItemFilter = ({ cursor, wordCount, updateCursor, updateFilter }) => {
       </HStack>
       <Flex align="center">
         <Text mr={4}>
-          {cursor + 1} - {cursor + 30} of {wordCount}
+          {cursor + 1} - {Math.min(cursor + 30, wordCount)} of {wordCount}
         </Text>
         <IconButton
           variant="ghost"
           aria-label="Previous Page"
           icon={<ChevronLeftIcon boxSize="1.5em" />}
+          isDisabled={cursor <= 0}
           onClick={() => updateCursor(-30)}
         />
         <IconButton
           variant="ghost"
           aria-label="Next Page"
           icon={<ChevronRightIcon boxSize="1.5em" />}
+          isDisabled={cursor + 30 >= wordCount}
           onClick={() => updateCursor(30)}
         />
       </Flex>

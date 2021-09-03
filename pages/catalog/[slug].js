@@ -104,12 +104,8 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
   // todo: probably better to use SWR
   // cf. https://github.com/leerob/fastfeedback/blob/master/pages/sites.js
   const [wordStats, setWordStats] = useState({});
-
   const [words, setWords] = useState(cards);
-  const [filters, setFilters] = useState({
-    sort: 'chronology',
-    filter: 'new',
-  });
+  const [filters, setFilters] = useState({ sort: 'chronology', filter: 'new' });
   const [cursor, setCursor] = useState(0);
   const [checkbox, setCheckbox] = useState(false);
 
