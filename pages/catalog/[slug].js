@@ -110,6 +110,7 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
   const [filters, setFilters] = useState({ sort: 'chronology', filter: 'new' });
   const [cursor, setCursor] = useState(0);
   const [checkbox, setCheckbox] = useState(false);
+  const [loading, setLoading] = useState({ known: false, lessons: false });
   const { ref, inView } = useInView({ threshold: 0.5 });
 
   const updateFilter = (filter, value) => {
@@ -161,6 +162,8 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
   };
 
   const addToKnown = async () => {
+    setLoading((p) => ({ ...p, known: true }));
+
     const data = words.filter((w) => w.selected === true);
 
     const response = await fetch('/api/cards', {
@@ -178,10 +181,14 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
       }));
       setWords(cards);
     }
+
+    setLoading((p) => ({ ...p, known: false }));
   };
 
   // todo: does this handle duplicate adding to lessons
   const addToLessons = async () => {
+    setLoading((p) => ({ ...p, lessons: true }));
+
     const data = words.filter((w) => w.selected === true);
 
     const response = await fetch('/api/cards', {
@@ -199,6 +206,8 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
       }));
       setWords(cards);
     }
+
+    setLoading((p) => ({ ...p, lessons: false }));
   };
 
   const applyItemFilters = (words) => {
@@ -379,6 +388,7 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
               numSelected={numSelected}
               checkbox={checkbox}
               handleCheckbox={handleCheckbox}
+              loading={loading}
               addToKnown={addToKnown}
               addToLessons={addToLessons}
             />

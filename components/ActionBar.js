@@ -3,7 +3,7 @@ import { Checkbox, Flex, HStack, IconButton, Text } from '@chakra-ui/react';
 import { BiCheck, BiExit } from 'react-icons/bi';
 
 // prettier-ignore
-const ActionBar = ({ numSelected, checkbox, handleCheckbox, addToKnown, addToLessons }) => (
+const ActionBar = ({ numSelected, checkbox, handleCheckbox, loading, addToKnown, addToLessons }) => (
   <Flex
     w="xs"
     justify="space-between"
@@ -33,14 +33,16 @@ const ActionBar = ({ numSelected, checkbox, handleCheckbox, addToKnown, addToLes
         colorScheme="green"
         aria-label="known"
         onClick={addToKnown}
+        isLoading={loading.known}
       />
       <IconButton
         icon={<BiExit />}
         variant="solid"
         borderRadius="full"
         colorScheme="blue"
-        aria-label="known"
+        aria-label="lessons"
         onClick={addToLessons}
+        isLoading={loading.lessons}
       />
     </HStack>
   </Flex>
