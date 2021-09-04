@@ -366,6 +366,8 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
                     border={selected ? '2px' : '1px'}
                     borderColor={selected ? 'blue.500' : 'gray.300'}
                     borderRadius="6px"
+                    cursor="pointer"
+                    _hover={{ boxShadow: 'base' }}
                     onMouseDown={() => selectWord(word)}
                   >
                     <Text
