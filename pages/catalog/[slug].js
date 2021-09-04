@@ -337,7 +337,14 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
               updateCursor={updateCursor}
               updateFilter={updateFilter}
             />
-            <SimpleGrid ref={ref} my={12} columns={6} spacing={4}>
+            <SimpleGrid
+              templateRows="repeat(5, 100px)"
+              columns={6}
+              spacing={4}
+              pt={12}
+              pb={36}
+              ref={ref}
+            >
               {wordsToDisplay
                 .slice(cursor, cursor + 30)
                 .map(({ word, definitions, selected }) => (
@@ -346,8 +353,6 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
                     direction="column"
                     justify="center"
                     align="center"
-                    w="180px"
-                    h="100px"
                     bg="white"
                     border={selected ? '2px' : '1px'}
                     borderColor={selected ? 'blue.500' : 'gray.300'}
