@@ -5,7 +5,9 @@ import { firestore as db } from '@/utils/firebase';
 import { Box, Flex, Heading, HStack, IconButton, SimpleGrid, Text, VStack } from '@chakra-ui/react';
 import { FaHeart, FaBookmark } from 'react-icons/fa';
 import { NextSeo } from 'next-seo';
+import { useInView } from 'react-intersection-observer';
 
+import { useAuth } from '@/lib/auth';
 import AuthCheck from '@/components/AuthCheck';
 import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
@@ -13,7 +15,7 @@ import Thumbnail from '@/components/Thumbnail';
 import VideoModal from '@/components/VideoModal';
 import ItemFilter from '@/components/ItemFilter';
 import ActionBar from '@/components/ActionBar';
-import { useAuth } from '@/lib/auth';
+import Slide from '@/components/Slide';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -108,6 +110,7 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
   const [filters, setFilters] = useState({ sort: 'chronology', filter: 'new' });
   const [cursor, setCursor] = useState(0);
   const [checkbox, setCheckbox] = useState(false);
+  const { ref, inView } = useInView({ threshold: 0.5 });
 
   const updateFilter = (filter, value) => {
     setFilters({ ...filters, [filter]: value });
@@ -334,7 +337,7 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
               updateCursor={updateCursor}
               updateFilter={updateFilter}
             />
-            <SimpleGrid my={12} columns={6} spacing={4}>
+            <SimpleGrid ref={ref} my={12} columns={6} spacing={4}>
               {wordsToDisplay
                 .slice(cursor, cursor + 30)
                 .map(({ word, definitions, selected }) => (
@@ -366,13 +369,15 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
                 ))}
             </SimpleGrid>
           </Box>
-          <ActionBar
-            numSelected={numSelected}
-            checkbox={checkbox}
-            handleCheckbox={handleCheckbox}
-            addToKnown={addToKnown}
-            addToLessons={addToLessons}
-          />
+          <Slide inView={inView}>
+            <ActionBar
+              numSelected={numSelected}
+              checkbox={checkbox}
+              handleCheckbox={handleCheckbox}
+              addToKnown={addToKnown}
+              addToLessons={addToLessons}
+            />
+          </Slide>
         </Flex>
       </AuthCheck>
     </>

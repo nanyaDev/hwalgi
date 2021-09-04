@@ -5,9 +5,6 @@ import { BiCheck, BiExit } from 'react-icons/bi';
 // prettier-ignore
 const ActionBar = ({ numSelected, checkbox, handleCheckbox, addToKnown, addToLessons }) => (
   <Flex
-    pos="fixed"
-    right={4}
-    bottom={4}
     w="xs"
     justify="space-between"
     align="center"
