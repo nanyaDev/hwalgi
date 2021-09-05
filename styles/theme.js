@@ -28,6 +28,34 @@ const Input = {
   },
 };
 
+const Checkbox = {
+  baseStyle: {
+    control: {
+      _focus: {
+        boxShadow: 'none',
+      },
+      _focusVisible: {
+        boxShadow: 'outline',
+      },
+    },
+  },
+};
+
+const Select = {
+  baseStyle: {
+    field: {
+      _focus: {
+        boxShadow: 'none',
+        borderColor: 'gray.200',
+      },
+      _focusVisible: {
+        boxShadow: 'none',
+        borderColor: 'gray.200',
+      },
+    },
+  },
+};
+
 // todo: this removes the focus ring for keyboard users
 const Switch = {
   baseStyle: {
@@ -61,6 +89,8 @@ const theme = extendTheme({
   components: {
     Button,
     Input,
+    Checkbox,
+    Select,
     Switch,
   },
 });
