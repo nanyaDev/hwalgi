@@ -6,7 +6,7 @@ import useKey from '@/lib/useKey';
 import useLessons from '@/lib/useLessons';
 import useReviews from '@/lib/useReviews';
 // prettier-ignore
-import { Card, TitleBar, Prompt, Info,  Response, Shell, LessonButtons, ReviewButtons } from '@/components/Flashcard';
+import { Card, TitleBar, Prompt, Info,  Response, Shell, LessonButtons, ReviewButtons, LessonTags } from '@/components/Flashcard';
 import { cardData } from '@/utils/mockData';
 
 const Lessons = () => {
@@ -37,6 +37,11 @@ const Lessons = () => {
 
   useKey('ArrowLeft', backwards);
   useKey('Escape', backwards);
+
+  // ? shouldn't this go in useLessons
+  const cursor = Math.floor(lessonIndex / 5) * 5;
+  const curr = lessonIndex - cursor;
+  const tags = lessonData.slice(cursor, cursor + 5).map((wObj) => wObj.word);
 
   // todo: disable buttons and keys when they shouldn't be pressed
   // todo: Prompt component name doesn't make much sense in lesson context
@@ -75,6 +80,7 @@ const Lessons = () => {
             </>
           )}
         </Card>
+        {mode === 'lesson' && <LessonTags tags={tags} curr={curr} />}
       </Shell>
     </AuthCheck>
   );

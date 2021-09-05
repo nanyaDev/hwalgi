@@ -1,6 +1,6 @@
 // todo: find approach that doesn't export multiple components from 1 file
 // prettier-ignore
-import { Button, Center, Flex, FormControl, FormLabel, Input, Kbd, Switch, Text } from '@chakra-ui/react';
+import { Button, Center, Flex, FormControl, FormLabel, HStack, Input, Kbd, Switch, Text } from '@chakra-ui/react';
 
 const Shell = ({ children }) => (
   <Flex
@@ -208,5 +208,24 @@ const ReviewButtons = ({ handleRetry, handleSubmit }) => (
   </Flex>
 );
 
+const LessonTags = ({ tags, curr }) => {
+  return (
+    <HStack mt={4}>
+      {tags.map((tag, i) => {
+        return (
+          <Button
+            key={`tag-${tag}`}
+            bg={i <= curr ? 'purple.500' : 'gray.500'}
+            color="white"
+            size="xs"
+          >
+            {tag}
+          </Button>
+        );
+      })}
+    </HStack>
+  );
+};
+
 // prettier-ignore
-export { Shell, Card, TitleBar, Prompt, Info, Response, LessonButtons, ReviewButtons };
+export { Shell, Card, TitleBar, Prompt, Info, Response, LessonButtons, ReviewButtons, LessonTags };
