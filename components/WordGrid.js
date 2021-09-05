@@ -16,7 +16,6 @@ const WordGrid = ({ cards }) => {
   const [words, setWords] = useState(cards);
   const [filters, setFilters] = useState({ sort: 'chronology', filter: 'new' });
   const [cursor, setCursor] = useState(0);
-  const [checkbox, setCheckbox] = useState(false);
   const [loading, setLoading] = useState({ known: false, lessons: false });
   const { ref, inView } = useInView({ threshold: 0.5 });
 
@@ -26,28 +25,6 @@ const WordGrid = ({ cards }) => {
 
   const updateCursor = (change) => {
     setCursor((p) => p + change);
-    setCheckbox(false);
-  };
-
-  // todo: make checkbox functionality more logical
-  const handleCheckbox = () => {
-    // todo: DRY up this code taken from selectWord
-    const copy = words.map((obj) => ({ ...obj })); // deep copy hack
-    // ? how does using wordsToDisplay here affect rerendering
-    const pageWords = wordsToDisplay
-      .slice(cursor, cursor + 30)
-      .map((wObj) => wObj.word);
-
-    const update = copy.map((wordObj) => {
-      if (pageWords.includes(wordObj.word)) {
-        wordObj.selected = !checkbox;
-      }
-
-      return wordObj;
-    });
-
-    setWords(update);
-    setCheckbox((p) => !p);
   };
 
   // todo: this all seems very inefficient, with the grid rerendered every time
@@ -148,6 +125,35 @@ const WordGrid = ({ cards }) => {
   const numSelected = words.filter((w) => w.selected === true).length;
   // ? does this update when wordStats changes since wordStats is hidden in the function
   const wordsToDisplay = applyItemFilters(words);
+  // ? does this have to come after wordsToDispaly decalaration to use updated value on rerender
+  const allChecked = wordsToDisplay
+    .slice(cursor, cursor + 30)
+    .every((wordObj) => wordObj.selected);
+  const isIndeterminate =
+    wordsToDisplay
+      .slice(cursor, cursor + 30)
+      .some((wordObj) => wordObj.selected) && !allChecked;
+
+  // todo: make checkbox functionality more logical
+  const handleCheckbox = () => {
+    // todo: DRY up this code taken from selectWord
+    const copy = words.map((obj) => ({ ...obj })); // deep copy hack
+    // ? how does using wordsToDisplay here affect rerendering
+    const pageWords = wordsToDisplay
+      .slice(cursor, cursor + 30)
+      .map((wObj) => wObj.word);
+
+    const bool = !isIndeterminate && !allChecked;
+    const update = copy.map((wordObj) => {
+      if (pageWords.includes(wordObj.word)) {
+        wordObj.selected = bool;
+      }
+
+      return wordObj;
+    });
+
+    setWords(update);
+  };
 
   // todo: react suspense ?!
   // cf. https://stackoverflow.com/questions/53332321/
@@ -216,7 +222,8 @@ const WordGrid = ({ cards }) => {
       <Slide inView={inView}>
         <ActionBar
           numSelected={numSelected}
-          checkbox={checkbox}
+          isChecked={allChecked}
+          isIndeterminate={isIndeterminate}
           handleCheckbox={handleCheckbox}
           loading={loading}
           addToKnown={addToKnown}

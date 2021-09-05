@@ -3,7 +3,7 @@ import { Checkbox, Flex, HStack, IconButton, Text } from '@chakra-ui/react';
 import { BiCheck, BiExit } from 'react-icons/bi';
 
 // prettier-ignore
-const ActionBar = ({ numSelected, checkbox, handleCheckbox, loading, addToKnown, addToLessons }) => (
+const ActionBar = ({ numSelected, isChecked, isIndeterminate, handleCheckbox, loading, addToKnown, addToLessons }) => (
   <Flex
     w="xs"
     justify="space-between"
@@ -18,7 +18,8 @@ const ActionBar = ({ numSelected, checkbox, handleCheckbox, loading, addToKnown,
       <Checkbox
         size="lg"
         colorScheme="blue"
-        isChecked={checkbox}
+        isChecked={isChecked}
+        isIndeterminate={isIndeterminate}
         onChange={handleCheckbox}
       />
       <Text fontWeight="medium" color="gray.700">
