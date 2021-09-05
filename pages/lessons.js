@@ -4,22 +4,39 @@ import Navbar from '@/components/Navbar';
 import useToggle from '@/lib/useToggle';
 import useKey from '@/lib/useKey';
 import useLessons from '@/lib/useLessons';
+import useReviews from '@/lib/useReviews';
 // prettier-ignore
-import { Card, Info, LessonButtons, Prompt, Shell, TitleBar } from '@/components/Flashcard';
+import { Card, TitleBar, Prompt, Info,  Response, Shell, LessonButtons, ReviewButtons } from '@/components/Flashcard';
 import { cardData } from '@/utils/mockData';
 
 const Lessons = () => {
   const lessonData = cardData;
 
   const [context, toggleContext] = useToggle(true);
-  const { index, lesson, handleNext, handleBack } = useLessons(lessonData);
+  // prettier-ignore
+  const { index: lessonIndex, lesson, handleNext, handleBack } = useLessons(lessonData);
+  // prettier-ignore
+  const { index: reviewIndex, review, value, grade, handleInput, handleSubmit, handleRetry } = useReviews(lessonData);
+
+  // ? is this the best way of doing it
+  const mode =
+    lessonIndex % 5 === 0 && lessonIndex !== reviewIndex ? 'review' : 'lesson';
+
+  const forwards = () => {
+    mode === 'lesson' ? handleNext() : handleSubmit();
+  };
+
+  const backwards = () => {
+    mode === 'lesson' ? handleBack() : handleRetry();
+  };
 
   // todo: modify useKey to take multiple key arguments e.g. 'Enter Backspace'
-  useKey('ArrowRight', handleNext);
-  useKey('Enter', handleNext);
+  // todo: having same hotkeys for lessons and reviews isn't great
+  useKey('ArrowRight', forwards);
+  useKey('Enter', forwards);
 
-  useKey('ArrowLeft', handleBack);
-  useKey('Backspace', handleBack);
+  useKey('ArrowLeft', backwards);
+  useKey('Escape', backwards);
 
   // todo: disable buttons and keys when they shouldn't be pressed
   // todo: Prompt component name doesn't make much sense in lesson context
@@ -31,14 +48,32 @@ const Lessons = () => {
         <Card>
           <TitleBar
             title={lesson.title}
-            index={index}
+            index={reviewIndex}
             totalCount={lessonData.length}
             context={context}
             toggleContext={toggleContext}
           />
-          <Prompt context={context} item={lesson} />
-          <Info lesson={lesson} />
-          <LessonButtons handleBack={handleBack} handleNext={handleNext} />
+          {mode === 'lesson' ? (
+            <>
+              <Prompt context={context} item={lesson} />
+              <Info lesson={lesson} />
+              <LessonButtons handleBack={handleBack} handleNext={handleNext} />
+            </>
+          ) : (
+            <>
+              <Prompt context={context} item={review} />
+              <Response
+                grade={grade}
+                value={value}
+                review={review}
+                handleInput={handleInput}
+              />
+              <ReviewButtons
+                handleRetry={handleRetry}
+                handleSubmit={handleSubmit}
+              />
+            </>
+          )}
         </Card>
       </Shell>
     </AuthCheck>
