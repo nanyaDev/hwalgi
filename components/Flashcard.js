@@ -116,6 +116,17 @@ const Word = ({ word }) => (
   </Text>
 );
 
+const Info = ({ lesson }) => (
+  <>
+    <Text fontSize="32px" color="gray.600">
+      {lesson.definitions[0]}
+    </Text>
+    <Text fontSize="24px" color="gray.400">
+      {lesson.definitions.slice(1, 3).join(', ')}
+    </Text>
+  </>
+);
+
 const Response = ({ grade, value, review, handleInput }) => {
   return (
     <>
@@ -155,6 +166,27 @@ const Response = ({ grade, value, review, handleInput }) => {
   );
 };
 
+const LessonButtons = ({ handleBack, handleNext }) => (
+  <Flex justify="space-between" mt="auto" mb={16} w="md">
+    <Button
+      variant="ghost"
+      border="1px"
+      colorScheme="purple"
+      onClick={handleBack}
+    >
+      <Kbd mr={2}>←</Kbd> Back
+    </Button>
+    <Button
+      variant="ghost"
+      border="1px"
+      colorScheme="blue"
+      onClick={handleNext}
+    >
+      Next <Kbd ml={2}>↵</Kbd>
+    </Button>
+  </Flex>
+);
+
 const ReviewButtons = ({ handleRetry, handleSubmit }) => (
   <Flex justify="space-between" mt="auto" mb={16} w="md">
     <Button
@@ -176,4 +208,5 @@ const ReviewButtons = ({ handleRetry, handleSubmit }) => (
   </Flex>
 );
 
-export { Shell, Card, TitleBar, Prompt, Response, ReviewButtons };
+// prettier-ignore
+export { Shell, Card, TitleBar, Prompt, Info, Response, LessonButtons, ReviewButtons };
