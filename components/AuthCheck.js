@@ -10,7 +10,7 @@ const AuthCheck = ({ children, isRequired = true }) => {
 
   useEffect(() => {
     if (isRequired && auth.user === false) router.push('/landing');
-    if (!isRequired && auth.user) router.push('/catalog');
+    if (!isRequired && auth.user) router.push('/');
   }, [auth, router, isRequired]);
 
   // ? - why does if(!auth) work in flytrap and usehooks.com

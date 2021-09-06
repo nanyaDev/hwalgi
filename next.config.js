@@ -4,4 +4,14 @@ module.exports = {
   images: {
     domains: ['image.tmdb.org'],
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/',
+          destination: '/catalog',
+        },
+      ],
+    };
+  },
 };
