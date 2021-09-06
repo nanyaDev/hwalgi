@@ -2,6 +2,16 @@ import admin, { fireauth, firestore } from '@/utils/fireadmin';
 
 // todo: improve html response with more details (perhaps from firebase response)
 const handler = async (req, res) => {
+  if (req.method === 'GET') {
+    const { uid } = await fireauth.verifyIdToken(req.headers.token);
+
+    const wordStatsRef = firestore.collection('wordStats').doc(uid);
+    const doc = await wordStatsRef.get();
+
+    // todo: conditional chaining seems hacky
+    res.status(200).json(doc?.data());
+  }
+
   if (req.method === 'POST') {
     const { uid } = await fireauth.verifyIdToken(req.headers.token);
 
@@ -29,6 +39,8 @@ const handler = async (req, res) => {
 
       await Promise.all(
         data.map((card) => {
+          // todo: probs better to validate firestore rules
+          // cf. https://firebase.google.com/docs/rules/data-validation
           // prettier-ignore
           const { id, definitions, frequency, translation, length, start, sentence, title, word, pos } = card;
           // prettier-ignore
@@ -48,16 +60,6 @@ const handler = async (req, res) => {
     }
 
     res.status(200).send();
-  }
-
-  if (req.method === 'GET') {
-    const { uid } = await fireauth.verifyIdToken(req.headers.token);
-
-    const wordStatsRef = firestore.collection('wordStats').doc(uid);
-    const doc = await wordStatsRef.get();
-
-    // todo: conditional chaining seems hacky
-    res.status(200).json(doc?.data());
   }
 };
 
