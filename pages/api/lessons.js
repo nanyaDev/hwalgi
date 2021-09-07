@@ -18,7 +18,33 @@ const handler = async (req, res) => {
   }
 
   if (req.method === 'POST') {
-    // res.status(200).json({});
+    const { uid } = await fireauth.verifyIdToken(req.headers.token);
+
+    const [id] = req.body;
+
+    // Move from lessons to reviews subcollection:
+    //   a. Get card from lessons
+    //   b. Add card to reviews
+    //   c. Delete card from lessons
+    const lessonRef = firestore
+      .collection('users')
+      .doc(uid)
+      .collection('lessons')
+      .doc(id);
+
+    const reviewRef = firestore
+      .collection('users')
+      .doc(uid)
+      .collection('reviews')
+      .doc(id);
+
+    const data = (await lessonRef.get()).data();
+
+    const batch = firestore.batch();
+    batch.set(reviewRef, data);
+    batch.delete(lessonRef);
+    await batch.commit();
+
     res.status(200).send();
   }
 };
