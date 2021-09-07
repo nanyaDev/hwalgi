@@ -1,4 +1,4 @@
-import { fireauth, firestore } from '@/utils/fireadmin';
+import firebase, { fireauth, firestore } from '@/utils/fireadmin';
 
 const handler = async (req, res) => {
   if (req.method === 'GET') {
@@ -22,10 +22,11 @@ const handler = async (req, res) => {
 
     const [id] = req.body;
 
-    // Move from lessons to reviews subcollection:
+    // 1. Move from lessons to reviews subcollection:
     //   a. Get card from lessons
     //   b. Add card to reviews
     //   c. Delete card from lessons
+    // 2. Add relevent SRS fields
     const lessonRef = firestore
       .collection('users')
       .doc(uid)
@@ -38,10 +39,16 @@ const handler = async (req, res) => {
       .collection('reviews')
       .doc(id);
 
-    const data = (await lessonRef.get()).data();
+    const lesson = (await lessonRef.get()).data();
+    const srs = 1;
+    const now = new Date().getTime();
+    const learnedAt = firebase.firestore.Timestamp.fromMillis(now);
+    const dueAt = firebase.firestore.Timestamp.fromMillis(
+      now + 4 * 60 * 60 * 1000
+    );
 
     const batch = firestore.batch();
-    batch.set(reviewRef, data);
+    batch.set(reviewRef, { ...lesson, srs, learnedAt, dueAt });
     batch.delete(lessonRef);
     await batch.commit();
 
