@@ -1,4 +1,4 @@
-import firebase, { fireauth, firestore } from '@/utils/fireadmin';
+import admin, { fireauth, firestore } from '@/utils/fireadmin';
 
 const handler = async (req, res) => {
   if (req.method === 'GET') {
@@ -42,8 +42,8 @@ const handler = async (req, res) => {
     const lesson = (await lessonRef.get()).data();
     const srs = 1;
     const now = new Date().getTime();
-    const learnedAt = firebase.firestore.Timestamp.fromMillis(now);
-    const dueAt = firebase.firestore.Timestamp.fromMillis(
+    const learnedAt = admin.firestore.Timestamp.fromMillis(now);
+    const dueAt = admin.firestore.Timestamp.fromMillis(
       now + 4 * 60 * 60 * 1000
     );
 
