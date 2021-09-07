@@ -46,9 +46,10 @@ const handler = async (req, res) => {
     const dueAt = admin.firestore.Timestamp.fromMillis(
       now + 4 * 60 * 60 * 1000
     );
+    const nIncorrect = 0;
 
     const batch = firestore.batch();
-    batch.set(reviewRef, { ...lesson, srs, learnedAt, dueAt });
+    batch.set(reviewRef, { ...lesson, srs, learnedAt, dueAt, nIncorrect });
     batch.delete(lessonRef);
     await batch.commit();
 
