@@ -5,11 +5,21 @@ const handler = async (req, res) => {
   if (req.method === 'GET') {
     const { uid } = await fireauth.verifyIdToken(req.headers.token);
 
-    const wordStatsRef = firestore.collection('wordStats').doc(uid);
-    const doc = await wordStatsRef.get();
+    const statsRef = firestore.collection('users').doc(uid).collection('stats');
+    const docs = (await statsRef.get()).docs;
 
-    // todo: conditional chaining seems hacky
-    res.status(200).json(doc?.data());
+    // Reshapes docs to this form:
+    // {
+    //   "known": [ "되다", "반대", ... ],
+    //   "learning": [ "씨", "자다", ... ]
+    // }
+    const data = docs.reduce((acc, doc) => {
+      acc[doc.id] = doc.data().words;
+      return acc;
+    }, {});
+
+    // todo: what if they have no stats yet
+    res.status(200).json(data);
   }
 
   if (req.method === 'POST') {
@@ -18,10 +28,14 @@ const handler = async (req, res) => {
     const { destination, data } = req.body;
 
     if (destination === 'known') {
-      const wordStatsRef = firestore.collection('wordStats').doc(uid);
-      await wordStatsRef.set(
+      const knownRef = firestore
+        .collection('users')
+        .doc(uid)
+        .collection('stats')
+        .doc('known');
+      await knownRef.set(
         {
-          known: admin.firestore.FieldValue.arrayUnion(
+          words: admin.firestore.FieldValue.arrayUnion(
             ...data.map((card) => card.word)
           ),
         },
@@ -39,7 +53,7 @@ const handler = async (req, res) => {
 
       await Promise.all(
         data.map((card) => {
-          // todo: probs better to validate firestore rules
+          // todo: probs better to validate with firestore rules
           // cf. https://firebase.google.com/docs/rules/data-validation
           // prettier-ignore
           const { id, definitions, frequency, translation, length, start, sentence, title, word, pos } = card;
@@ -48,10 +62,15 @@ const handler = async (req, res) => {
         })
       );
 
-      const wordStatsRef = firestore.collection('wordStats').doc(uid);
-      await wordStatsRef.set(
+      const learningRef = firestore
+        .collection('users')
+        .doc(uid)
+        .collection('stats')
+        .doc('learning');
+
+      await learningRef.set(
         {
-          learning: admin.firestore.FieldValue.arrayUnion(
+          words: admin.firestore.FieldValue.arrayUnion(
             ...data.map((card) => card.word)
           ),
         },

@@ -12,7 +12,8 @@ const WordGrid = ({ cards }) => {
   const { user } = useAuth();
   // todo: probably better to use SWR
   // cf. https://github.com/leerob/fastfeedback/blob/master/pages/sites.js
-  const [wordStats, setWordStats] = useState({});
+  const [known, setKnown] = useState([]);
+  const [learning, setLearning] = useState([]);
   const [words, setWords] = useState(cards);
   const [filters, setFilters] = useState({ sort: 'chronology', filter: 'new' });
   const [cursor, setCursor] = useState(0);
@@ -59,10 +60,7 @@ const WordGrid = ({ cards }) => {
 
     // todo: is there a better way to catch errors (axios?)
     if (response.ok) {
-      setWordStats((p) => ({
-        ...p,
-        known: [...p.known, ...data.map((d) => d.word)],
-      }));
+      setKnown((p) => [...p, ...data.map((d) => d.word)]);
       setWords(cards);
     }
 
@@ -84,10 +82,7 @@ const WordGrid = ({ cards }) => {
 
     // todo: is there a better way to catch errors (axios?)
     if (response.ok) {
-      setWordStats((p) => ({
-        ...p,
-        learning: [...p.learning, ...data.map((d) => d.word)],
-      }));
+      setLearning((p) => [...p, ...data.map((d) => d.word)]);
       setWords(cards);
     }
 
@@ -98,14 +93,12 @@ const WordGrid = ({ cards }) => {
     let arr = words;
 
     if (filters.filter === 'known') {
-      arr = words.filter((wObj) => wordStats.known?.includes(wObj.word));
+      arr = words.filter((wObj) => known.includes(wObj.word));
     } else if (filters.filter === 'learning') {
-      arr = words.filter((wObj) => wordStats.learning?.includes(wObj.word));
+      arr = words.filter((wObj) => learning.includes(wObj.word));
     } else if (filters.filter === 'new') {
       arr = words.filter(
-        (wObj) =>
-          !wordStats.known?.includes(wObj.word) &&
-          !wordStats.learning?.includes(wObj.word)
+        (wObj) => !known?.includes(wObj.word) && !learning.includes(wObj.word)
       );
     }
 
@@ -123,7 +116,7 @@ const WordGrid = ({ cards }) => {
   };
 
   const numSelected = words.filter((w) => w.selected === true).length;
-  // ? does this update when wordStats changes since wordStats is hidden in the function
+  // ? does this update when known/learning changes since known/learning are hidden in the function
   const wordsToDisplay = applyItemFilters(words);
   // ? does this have to come after wordsToDispaly decalaration to use updated value on rerender
   const allChecked = wordsToDisplay
@@ -166,7 +159,8 @@ const WordGrid = ({ cards }) => {
           credentials: 'same-origin',
         });
         const responseJSON = await response.json();
-        setWordStats(responseJSON);
+        setKnown(responseJSON.known);
+        setLearning(responseJSON.learning);
       })();
     }
   }, [user]);
