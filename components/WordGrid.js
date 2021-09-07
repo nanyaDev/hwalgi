@@ -98,7 +98,7 @@ const WordGrid = ({ cards }) => {
       arr = words.filter((wObj) => learning.includes(wObj.word));
     } else if (filters.filter === 'new') {
       arr = words.filter(
-        (wObj) => !known?.includes(wObj.word) && !learning.includes(wObj.word)
+        (wObj) => !known.includes(wObj.word) && !learning.includes(wObj.word)
       );
     }
 
@@ -159,8 +159,8 @@ const WordGrid = ({ cards }) => {
           credentials: 'same-origin',
         });
         const responseJSON = await response.json();
-        setKnown(responseJSON.known);
-        setLearning(responseJSON.learning);
+        setKnown(responseJSON.known || []);
+        setLearning(responseJSON.learning || []);
       })();
     }
   }, [user]);
