@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Text } from '@chakra-ui/react';
 
 import AuthCheck from '@/components/AuthCheck';
 import GradientBar from '@/components/GradientBar';
@@ -21,6 +22,15 @@ const Reviews = () => {
   const { reviews, setReviews, index, value, grade, handleInput, handleSubmit, handleRetry, } = useReviews('reviews');
 
   const review = reviews?.[index];
+
+  let mode;
+  if (reviews !== null && reviews?.length === 0) {
+    mode = 'none';
+  } else if (index === reviews?.length) {
+    mode = 'completed';
+  } else {
+    mode = 'review';
+  }
 
   useKey('Enter', handleSubmit);
   useKey('Escape', handleRetry);
@@ -46,24 +56,38 @@ const Reviews = () => {
         <Navbar />
         <Shell>
           <Card>
-            <TitleBar
-              title={review?.title}
-              index={index}
-              totalCount={reviews?.length}
-              context={context}
-              toggleContext={toggleContext}
-            />
-            <Prompt context={context} item={review} />
-            <Response
-              grade={grade}
-              value={value}
-              review={review}
-              handleInput={handleInput}
-            />
-            <ReviewButtons
-              handleRetry={handleRetry}
-              handleSubmit={handleSubmit}
-            />
+            {mode === 'review' && (
+              <>
+                <TitleBar
+                  title={review?.title}
+                  index={index}
+                  totalCount={reviews?.length}
+                  context={context}
+                  toggleContext={toggleContext}
+                />
+                <Prompt context={context} item={review} />
+                <Response
+                  grade={grade}
+                  value={value}
+                  review={review}
+                  handleInput={handleInput}
+                />
+                <ReviewButtons
+                  handleRetry={handleRetry}
+                  handleSubmit={handleSubmit}
+                />
+              </>
+            )}
+            {mode === 'none' && (
+              <Text fontWeight="light" color="gray.700" fontSize="3xl">
+                You have no reviews! 😱
+              </Text>
+            )}
+            {mode === 'completed' && (
+              <Text fontWeight="light" color="gray.700" fontSize="3xl">
+                You&#39;re all done with your reviews! 🎉
+              </Text>
+            )}
           </Card>
         </Shell>
       </ContentCheck>

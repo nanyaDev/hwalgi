@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { Text } from '@chakra-ui/react';
+
 import AuthCheck from '@/components/AuthCheck';
 import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
@@ -23,11 +25,22 @@ const Lessons = () => {
   const review = reviews?.[reviewIndex];
 
   // ? is this the best way of doing it
-  const mode =
-    (lessonIndex % 5 === 0 && lessonIndex !== reviewIndex) ||
-    lessonIndex === lessons?.length
-      ? 'review'
-      : 'lesson';
+  // ? if (lessons === null) return <Loader /> might eliminate a lot of ?. chaining
+  let mode;
+  if (lessons !== null && lessons?.length === 0) {
+    mode = 'none';
+  } else if (
+    lessonIndex === lessons?.length &&
+    reviewIndex === reviews?.length
+  ) {
+    mode = 'completed';
+  } else if (lessonIndex % 5 === 0 && lessonIndex < reviewIndex) {
+    mode = 'review';
+  } else if (lessonIndex === lessons?.length) {
+    mode = 'review';
+  } else {
+    mode = 'lesson';
+  }
 
   const forwards = () => {
     mode === 'lesson' ? handleNext() : handleSubmit();
@@ -74,7 +87,7 @@ const Lessons = () => {
         <Navbar />
         <Shell>
           <Card>
-            {mode === 'lesson' ? (
+            {mode === 'lesson' && (
               <>
                 <TitleBar
                   title={lesson?.title}
@@ -90,7 +103,8 @@ const Lessons = () => {
                   handleNext={handleNext}
                 />
               </>
-            ) : (
+            )}
+            {mode === 'review' && (
               <>
                 <TitleBar
                   title={review?.title}
@@ -111,6 +125,16 @@ const Lessons = () => {
                   handleSubmit={handleSubmit}
                 />
               </>
+            )}
+            {mode === 'none' && (
+              <Text fontWeight="light" color="gray.700" fontSize="3xl">
+                You have no lessons! 😱
+              </Text>
+            )}
+            {mode === 'completed' && (
+              <Text fontWeight="light" color="gray.700" fontSize="3xl">
+                You&#39;re all done with your lessons! 🎉
+              </Text>
             )}
           </Card>
           {mode === 'lesson' && <LessonTags tags={tags} curr={curr} />}
