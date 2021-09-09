@@ -15,9 +15,9 @@ const Lessons = () => {
   const { user } = useAuth();
   const [context, toggleContext] = useToggle(true);
   // prettier-ignore
-  const { lessons, setLessons, index: lessonIndex, handleNext, handleBack } = useLessons(null);
+  const { lessons, setLessons, index: lessonIndex, handleNext, handleBack } = useLessons();
   // prettier-ignore
-  const { reviews, setReviews, index: reviewIndex, value, grade, handleInput, handleSubmit, handleRetry } = useReviews(null);
+  const { reviews, setReviews, index: reviewIndex, value, grade, handleInput, handleSubmit, handleRetry } = useReviews('lessons');
 
   const lesson = lessons?.[lessonIndex];
   const review = reviews?.[reviewIndex];

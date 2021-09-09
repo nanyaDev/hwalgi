@@ -16,10 +16,9 @@ import ContentCheck from '@/components/ContentCheck';
 // todo: abstract background to shell
 const Reviews = () => {
   const { user } = useAuth();
-
   const [context, toggleContext] = useToggle(true);
   // prettier-ignore
-  const { reviews, setReviews, index, value, grade, handleInput, handleSubmit, handleRetry, } = useReviews(null);
+  const { reviews, setReviews, index, value, grade, handleInput, handleSubmit, handleRetry, } = useReviews('reviews');
 
   const review = reviews?.[index];
 
