@@ -23,9 +23,11 @@ const Lessons = () => {
   const review = reviews?.[reviewIndex];
 
   // ? is this the best way of doing it
-  // todo: < 5 lessons breaks this
   const mode =
-    lessonIndex % 5 === 0 && lessonIndex !== reviewIndex ? 'review' : 'lesson';
+    (lessonIndex % 5 === 0 && lessonIndex !== reviewIndex) ||
+    lessonIndex === lessons?.length
+      ? 'review'
+      : 'lesson';
 
   const forwards = () => {
     mode === 'lesson' ? handleNext() : handleSubmit();
