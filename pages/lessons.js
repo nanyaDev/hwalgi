@@ -1,24 +1,29 @@
+import { useEffect } from 'react';
 import AuthCheck from '@/components/AuthCheck';
 import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
+import ContentCheck from '@/components/ContentCheck';
 import useToggle from '@/lib/useToggle';
 import useKey from '@/lib/useKey';
 import useLessons from '@/lib/useLessons';
 import useReviews from '@/lib/useReviews';
 // prettier-ignore
 import { Card, TitleBar, Prompt, Info,  Response, Shell, LessonButtons, ReviewButtons, LessonTags } from '@/components/Flashcard';
-import { cardData } from '@/utils/mockData';
+import { useAuth } from '@/lib/auth';
 
 const Lessons = () => {
-  const lessonData = cardData;
-
+  const { user } = useAuth();
   const [context, toggleContext] = useToggle(true);
   // prettier-ignore
-  const { index: lessonIndex, lesson, handleNext, handleBack } = useLessons(lessonData);
+  const { lessons, setLessons, index: lessonIndex, handleNext, handleBack } = useLessons(null);
   // prettier-ignore
-  const { index: reviewIndex, review, value, grade, handleInput, handleSubmit, handleRetry } = useReviews(lessonData);
+  const { reviews, setReviews, index: reviewIndex, value, grade, handleInput, handleSubmit, handleRetry } = useReviews(null);
+
+  const lesson = lessons?.[lessonIndex];
+  const review = reviews?.[reviewIndex];
 
   // ? is this the best way of doing it
+  // todo: < 5 lessons breaks this
   const mode =
     lessonIndex % 5 === 0 && lessonIndex !== reviewIndex ? 'review' : 'lesson';
 
@@ -41,47 +46,74 @@ const Lessons = () => {
   // ? shouldn't this go in useLessons
   const cursor = Math.floor(lessonIndex / 5) * 5;
   const curr = lessonIndex - cursor;
-  const tags = lessonData.slice(cursor, cursor + 5).map((wObj) => wObj.word);
+  const tags = lessons?.slice(cursor, cursor + 5).map((wObj) => wObj.word);
+
+  useEffect(() => {
+    if (user) {
+      (async () => {
+        const response = await fetch('/api/lessons', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', token: user.token },
+          credentials: 'same-origin',
+        });
+        const responseJSON = await response.json();
+        setLessons(responseJSON);
+        setReviews(responseJSON);
+      })();
+    }
+  }, [user, setLessons, setReviews]);
 
   // todo: disable buttons and keys when they shouldn't be pressed
   // todo: Prompt component name doesn't make much sense in lesson context
   return (
     <AuthCheck>
-      <GradientBar />
-      <Navbar />
-      <Shell>
-        <Card>
-          <TitleBar
-            title={lesson.title}
-            index={reviewIndex}
-            totalCount={lessonData.length}
-            context={context}
-            toggleContext={toggleContext}
-          />
-          {mode === 'lesson' ? (
-            <>
-              <Prompt context={context} item={lesson} />
-              <Info lesson={lesson} />
-              <LessonButtons handleBack={handleBack} handleNext={handleNext} />
-            </>
-          ) : (
-            <>
-              <Prompt context={context} item={review} />
-              <Response
-                grade={grade}
-                value={value}
-                review={review}
-                handleInput={handleInput}
-              />
-              <ReviewButtons
-                handleRetry={handleRetry}
-                handleSubmit={handleSubmit}
-              />
-            </>
-          )}
-        </Card>
-        {mode === 'lesson' && <LessonTags tags={tags} curr={curr} />}
-      </Shell>
+      <ContentCheck content={lessons}>
+        <GradientBar />
+        <Navbar />
+        <Shell>
+          <Card>
+            {mode === 'lesson' ? (
+              <>
+                <TitleBar
+                  title={lesson?.title}
+                  index={reviewIndex}
+                  totalCount={lessons?.length}
+                  context={context}
+                  toggleContext={toggleContext}
+                />
+                <Prompt context={context} item={lesson} />
+                <Info lesson={lesson} />
+                <LessonButtons
+                  handleBack={handleBack}
+                  handleNext={handleNext}
+                />
+              </>
+            ) : (
+              <>
+                <TitleBar
+                  title={review?.title}
+                  index={reviewIndex}
+                  totalCount={reviews?.length}
+                  context={context}
+                  toggleContext={toggleContext}
+                />
+                <Prompt context={context} item={review} />
+                <Response
+                  grade={grade}
+                  value={value}
+                  review={review}
+                  handleInput={handleInput}
+                />
+                <ReviewButtons
+                  handleRetry={handleRetry}
+                  handleSubmit={handleSubmit}
+                />
+              </>
+            )}
+          </Card>
+          {mode === 'lesson' && <LessonTags tags={tags} curr={curr} />}
+        </Shell>
+      </ContentCheck>
     </AuthCheck>
   );
 };
