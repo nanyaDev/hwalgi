@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Center, Spinner } from '@chakra-ui/react';
 
 import { useAuth } from '@/lib/auth';
+import Loader from './Loader';
 
 const AuthCheck = ({ children, isRequired = true }) => {
   const auth = useAuth();
@@ -21,17 +21,5 @@ const AuthCheck = ({ children, isRequired = true }) => {
   if (!isRequired && auth?.user) return <Loader />;
   else return <>{children}</>;
 };
-
-const Loader = () => (
-  <Center flexGrow={1} w="full">
-    <Spinner
-      thickness="5px"
-      speed="0.65s"
-      emptyColor="gray.200"
-      color="blue.500"
-      size="xl"
-    />
-  </Center>
-);
 
 export default AuthCheck;
