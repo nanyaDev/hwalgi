@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, SimpleGrid } from '@chakra-ui/react';
+import { Box, SimpleGrid, Text } from '@chakra-ui/react';
 
 import { firestore as db } from '@/utils/firebase';
 import AuthCheck from '@/components/AuthCheck';
@@ -10,7 +10,6 @@ import CatalogFilter from '@/components/CatalogFilter';
 
 export const getStaticProps = async () => {
   const catalogRef = db.collection('catalog');
-  // todo: abstract this to a helper function, also in [slug].js
   const catalog = (await catalogRef.get()).docs.map((doc) => doc.data());
 
   // todo: error handling
@@ -68,6 +67,10 @@ const Catalog = ({ catalog }) => {
       <GradientBar />
       <Navbar />
       <Box flexGrow={1} bg="gray.50">
+        <Text align="center" color="red" fontWeight="semibold" pt={6}>
+          IMPORTANT: Parasite is the only show enabled for the beta testing
+          period.
+        </Text>
         <CatalogFilter
           updateFilter={updateFilter}
           updateSearch={updateSearch}
