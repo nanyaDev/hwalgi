@@ -10,6 +10,7 @@ import ItemInfo from '@/components/ItemInfo';
 import WordGrid from '@/components/WordGrid';
 // prettier-ignore
 import { getItemFromTMDB, getCreditsFromTMDB, getTrailerFromTMDB, } from '@/lib/tmdb';
+import { getDataFromSpotify } from '@/lib/spotify';
 
 export const getStaticPaths = async () => {
   const catalogRef = db.collection('catalog');
@@ -28,11 +29,21 @@ export const getStaticProps = async ({ params }) => {
   const itemRef = db.collection('catalog').doc(slug);
   const itemData = (await itemRef.get()).data();
 
-  const [item, credits, trailer] = await Promise.all([
-    getItemFromTMDB(itemData),
-    getCreditsFromTMDB(itemData),
-    getTrailerFromTMDB(itemData),
-  ]);
+  let item, tidbits, media;
+  const { type } = itemData;
+
+  if (type === 'movie' || type === 'tv') {
+    [item, tidbits, media] = await Promise.all([
+      getItemFromTMDB(itemData),
+      getCreditsFromTMDB(itemData),
+      getTrailerFromTMDB(itemData),
+    ]);
+  }
+
+  if (type === 'music') {
+    [item, tidbits] = await getDataFromSpotify(itemData);
+    media = null;
+  }
 
   // ? is this good practice
   // ? how to do a named dynamic import
@@ -47,12 +58,12 @@ export const getStaticProps = async ({ params }) => {
   }
 
   return {
-    props: { item, credits, trailer, cards },
+    props: { item, tidbits, media, cards },
   };
 };
 
-// ? why does credits.director work even though it's an array
-const CatalogItem = ({ item, credits, trailer, cards }) => {
+// ? why does tidbits.director work even though it's an array
+const CatalogItem = ({ item, tidbits, media, cards }) => {
   return (
     <>
       <NextSeo title={item.title} />
@@ -60,7 +71,7 @@ const CatalogItem = ({ item, credits, trailer, cards }) => {
         <GradientBar />
         <Navbar />
         <Flex direction="column" grow={1} bg="gray.50">
-          <ItemInfo item={item} credits={credits} trailer={trailer} />
+          <ItemInfo item={item} tidbits={tidbits} media={media} />
           <WordGrid cards={cards} />
         </Flex>
       </AuthCheck>

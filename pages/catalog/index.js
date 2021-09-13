@@ -7,20 +7,23 @@ import GradientBar from '@/components/GradientBar';
 import Navbar from '@/components/Navbar';
 import Thumbnail from '@/components/Thumbnail';
 import CatalogFilter from '@/components/CatalogFilter';
+import { getPosterFromTMDB } from '@/lib/tmdb';
+import { getPosterFromSpotify } from '@/lib/spotify';
 
 export const getStaticProps = async () => {
   const catalogRef = db.collection('catalog');
-  const catalog = (await catalogRef.get()).docs.map((doc) => doc.data());
+  const catalogData = (await catalogRef.get()).docs.map((doc) => doc.data());
 
   // todo: error handling
-  await Promise.all(
-    catalog.map(async (item) => {
-      const request = `https://api.themoviedb.org/3/${item.type}/${item.tmdbID}?api_key=${process.env.TMDB_API_KEY}&language=en`;
-      const response = await fetch(request);
-      const data = await response.json();
-
-      // todo: get api base url from coniguration (cf. api docs)
-      item.posterURL = `https://image.tmdb.org/t/p/w500${data.poster_path}`;
+  const catalog = await Promise.all(
+    catalogData.map(async (itemData) => {
+      let item;
+      if (itemData.type === 'movie' || itemData.type === 'tv') {
+        item = getPosterFromTMDB(itemData);
+      } else if (itemData.type === 'music') {
+        item = getPosterFromSpotify(itemData);
+      }
+      return item;
     })
   );
 
@@ -76,9 +79,9 @@ const Catalog = ({ catalog }) => {
           updateSearch={updateSearch}
           clearFilters={clearFilters}
         />
-        <SimpleGrid columns={6} spacing={4} px={40}>
+        <SimpleGrid columns={6} spacing={4} px={40} pb={20}>
           {catalogToShow.map((item) => (
-            <Thumbnail key={item.tmdbID} item={item} w="140px" h="210px" />
+            <Thumbnail key={item.slug} item={item} w="140px" h="210px" />
           ))}
         </SimpleGrid>
       </Box>
